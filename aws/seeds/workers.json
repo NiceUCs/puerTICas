@@ -1,0 +1,10 @@
+[
+    {
+        "email": "worker1@worker.com",
+        "role": "worker",
+        "data": {
+            "name": "worker1",
+            "password": "password"
+        }
+    }
+]

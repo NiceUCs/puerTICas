@@ -1,0 +1,189 @@
+service: puerticas
+
+frameworkVersion: '2'
+
+package:
+  exclude:
+    - ./**
+    - node_modules/**
+    - postman/**
+    - seeds/**
+    - serverless.md
+    - package.json
+    - package-lock.json
+  #include:
+  #  - functions/**
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ${self:custom.region}
+  environment:
+    WORKERS_TABLE: ${self:custom.workersTable}
+    ADMINS_TABLE: ${self:custom.adminsTable}
+    REGISTERS_TABLE: ${self:custom.registersTable}
+    WORKERS_IMAGES_BUCKET: ${self:custom.workersImagesBucket}
+  apiGateway:
+    shouldStartNameWithService: true
+
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+    - dynamodb:Query
+    - dynamodb:Scan
+    - dynamodb:GetItem
+    - dynamodb:PutItem
+    - dynamodb:UpdateItem
+    - dynamodb:DeleteItem
+    Resource: 
+      - arn:aws:dynamodb:*:*:*
+      - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.workersTable}
+      - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.adminsTable}
+      - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.registersTable}
+  - Effect: Allow
+    Action:
+      - s3:PutObject
+      - s3:GetObject
+    Resource:
+      - arn:aws:s3:::${self:custom.workersImagesBucket}/*
+
+custom:
+  region: us-east-1
+
+  workersTable: ${self:service}-${self:custom.config.workersTableName}.${self:custom.region}.es
+  adminsTable: ${self:service}-${self:custom.config.adminsTableName}.${self:custom.region}.es
+  registersTable: ${self:service}-${self:custom.config.registersTableName}.${self:custom.region}.es
+
+  workersImagesBucket: ${self:service}-${self:custom.config.workersImagesBucketName}.${self:custom.region}.es
+
+  dynamodb:
+    # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      # inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+    seed:
+      domain:
+        sources:
+          - table: ${self:custom.workersTable}
+            sources: ${self:custom.config.workersSeeder}
+          - table: ${self:custom.adminsTable}
+            sources: ${self:custom.config.adminsSeeder}
+          - table: ${self:custom.registersTable}
+            sources: ${self:custom.config.registersSeeder}
+
+
+  #-------------VARIABLES------------------------------------  
+  config: ${file(./config.yml)}
+
+functions:
+  #-------------ADMINS------------------------------------
+  get_users:
+    handler: lambdas.admins.handler_admins.h_get_users
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/get_users
+          method: get
+          cors: true
+
+  get_analytics:
+    handler: lambdas.admins.handler_admins.h_get_analytics
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/get_analytics
+          method: get
+          cors: true
+
+#  login:
+#    handler: lambdas.admins.handler_admins.h_login
+#    events:
+#      - http:
+#          path: ${self:custom.config.apiUrls.admins}/login
+#          method: get
+#          cors: true
+
+#  register:
+#    handler: lambdas.admins.handler_admins.h_register
+#    events:
+#      - http:
+#          path: ${self:custom.config.apiUrls.admins}/register
+#          method: get
+#          cors: true
+
+  #-------------WORKERS------------------------------------
+  identify:
+    handler: lambdas.workers.handler_workers.h_identify
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.workers}/identify
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    #-------------DYNAMODB------------------------------------
+    adminsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.adminsTable}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
+
+    workersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.workersTable}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          #- AttributeName: image_url
+          #  AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
+    
+    registersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.registersTable}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: dateCreation
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+          - AttributeName: dateCreation
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
+    
+    #-------------S3------------------------------------
+    WorkersImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.workersImagesBucket}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline

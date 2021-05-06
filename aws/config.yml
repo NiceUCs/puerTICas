@@ -1,0 +1,18 @@
+#-------------DYNAMODB------------------------------------ 
+workersTableName: Workers
+workersSeeder: [./seeds/workers.json]
+
+adminsTableName: Admins
+adminsSeeder: [./seeds/admins.json]
+
+registersTableName: Registers
+registersSeeder: [./seeds/registers.json]
+
+#-------------S3------------------------------------ 
+workersImagesBucketName: workersImagesBucket
+
+#-------------API GATEWAY------------------------------------ 
+apiUrls:
+  admins: admins
+  workers: workers
+
