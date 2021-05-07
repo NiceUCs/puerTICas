@@ -11,7 +11,7 @@ import { HttpService } from './http/http.service';
 import { TokenInterceptor } from './http/token.interceptor';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, TranslateModule, TokenInterceptor, RouterModule],
+  imports: [CommonModule, HttpClientModule, TranslateModule, RouterModule],
   providers: [
     {
       provide: HttpClient,
