@@ -23,6 +23,7 @@ provider:
     ADMINS_TABLE: ${self:custom.adminsTable}
     REGISTERS_TABLE: ${self:custom.registersTable}
     WORKERS_IMAGES_BUCKET: ${self:custom.workersImagesBucket}
+    DOMAIN_SUFFIX: puerticas-com
   apiGateway:
     shouldStartNameWithService: true
 
@@ -123,9 +124,61 @@ functions:
           path: ${self:custom.config.apiUrls.workers}/identify
           method: get
           cors: true
-
+#-------------------RESOURCES-----------------------
 resources:
+
   Resources:
+#--------------------COGNITO---------------
+    serviceUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: puerticas-user-pool-${self:provider.stage}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            RequireLowercase: true
+            RequireSymbols: false
+            RequireNumbers: true
+            MinimumLength: 8
+            RequireUppercase: true
+        AdminCreateUserConfig:
+          InviteMessageTemplate:
+            EmailMessage: "Your puerTICas username is {username} and temporary password is {####}."
+            EmailSubject: "Your temporary puerTICas password"
+          UnusedAccountValidityDays: 7
+          AllowAdminCreateUserOnly: true
+    serviceUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-user-pool-client-${self:provider.stage}
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        UserPoolId:
+          Ref: serviceUserPool
+        CallbackURLs: 
+          - https://localhost:4200
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        GenerateSecret: false
+        SupportedIdentityProviders: 
+          - COGNITO
+    serviceUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain 
+      Properties:
+        UserPoolId: 
+          Ref: serviceUserPool
+        Domain: ${self:service}-user-pool-domain-${self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}
     #-------------DYNAMODB------------------------------------
     adminsTable:
       Type: AWS::DynamoDB::Table
