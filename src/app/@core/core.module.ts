@@ -1,17 +1,22 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouteReuseStrategy, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { RouteReusableStrategy } from './route-reusable-strategy';
 import { ApiPrefixInterceptor } from './http/api-prefix.interceptor';
 import { ErrorHandlerInterceptor } from './http/error-handler.interceptor';
+import { HttpService } from './http/http.service';
 import { TokenInterceptor } from './http/token.interceptor';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, TranslateModule, RouterModule, TokenInterceptor],
+  imports: [CommonModule, HttpClientModule, TranslateModule, TokenInterceptor, RouterModule],
   providers: [
+    {
+      provide: HttpClient,
+      useClass: HttpService,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ApiPrefixInterceptor,
