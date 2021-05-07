@@ -1,0 +1,21 @@
+[
+  {
+    "email": "josera.martinez@hotmail.com",
+    "name": "Jose",
+    "surname": "Martinez",
+    "dni": "45857525Z",
+    "phone": 487589632,
+    "image": "assets/puerticas-logo-white.png",
+    "born": "1998"
+  },
+
+  {
+    "email": "josera.martinez2@hotmail.com",
+    "name": "Jose2",
+    "surname": "Martinez",
+    "dni": "4585752ds5Z",
+    "phone": 487589632,
+    "image": "assets/puerticas-logo-white.png",
+    "born": "1998"
+  }
+]

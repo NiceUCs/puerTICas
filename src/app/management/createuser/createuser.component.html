@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Register New Users</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <div class="login-container">
+    <form (ngSubmit)="createUser()" [formGroup]="createUserForm" novalidate>
+      <ion-text color="danger" [hidden]="!error || createUserForm.dirty || isLoading">
+        <span style="font-size: 14px" class="ion-padding" translate>Incorrect information</span>
+      </ion-text>
+      <ion-list>
+        <ion-item lines="inset">
+          <ion-label color="medium" position="floating" translate>Email</ion-label>
+          <ion-input pattern="[^ @]*@[^ @]*" type="email" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-text
+          color="danger"
+          [hidden]="createUserForm.controls.email.valid || createUserForm.controls.email.untouched"
+        >
+          <span style="font-size: 14px" class="ion-padding" translate>Email incorrecto</span>
+        </ion-text>
+
+        <ion-item lines="inset">
+          <ion-label color="medium" position="floating" translate>DNI</ion-label>
+          <ion-input formControlName="dni"></ion-input>
+        </ion-item>
+
+        <ion-text color="danger" [hidden]="createUserForm.controls.dni.valid || createUserForm.controls.dni.untouched">
+          <span class="padding-password" translate>DNI incorrect</span>
+        </ion-text>
+        <ion-row>
+          <ion-col width-50>
+            <ion-item lines="inset">
+              <ion-label color="medium" position="floating" translate>First Name</ion-label>
+              <ion-input clearInput type="text" formControlName="name" autocomplete="name"></ion-input>
+            </ion-item>
+            <ion-text
+              color="danger"
+              [hidden]="createUserForm.controls.name.valid || createUserForm.controls.name.untouched"
+            >
+              <span class="ion-padding" style="font-size: 14px" translate>Name incorrect</span>
+            </ion-text>
+          </ion-col>
+          <ion-col width-50>
+            <ion-item lines="inset">
+              <ion-label color="medium" position="floating" translate>Surname</ion-label>
+              <ion-input clearInput type="text" formControlName="surname" autocomplete="surname"></ion-input>
+            </ion-item>
+            <ion-text
+              color="danger"
+              [hidden]="createUserForm.controls.surname.valid || createUserForm.controls.surname.untouched"
+            >
+              <span class="ion-padding" style="font-size: 14px" translate>Surname incorrect</span>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col width-75>
+            <ion-item lines="inset">
+              <ion-label color="medium" position="floating" translate>Phone</ion-label>
+              <ion-input
+                clearInput
+                type="number"
+                pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+                formControlName="phone"
+                autocomplete="phone"
+              ></ion-input>
+            </ion-item>
+            <ion-text
+              color="danger"
+              [hidden]="createUserForm.controls.phone.valid || createUserForm.controls.phone.untouched"
+            >
+              <span style="font-size: 14px" class="ion-padding" translate>Phone incorrect</span>
+            </ion-text>
+          </ion-col>
+          <ion-col width-25>
+            <ion-item lines="inset">
+              <ion-label color="medium" position="floating" translate>Born</ion-label>
+              <ion-input
+                clearInput
+                pattern="[1-2][9|0][1-9|0][0-9]"
+                max="2020"
+                type="text"
+                formControlName="born"
+                autocomplete="born"
+              ></ion-input>
+            </ion-item>
+            <ion-text
+              color="danger"
+              [hidden]="createUserForm.controls.born.valid || createUserForm.controls.born.untouched"
+            >
+              <span style="font-size: 14px" class="ion-padding" translate>Born incorrect</span>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-item lines="inset">
+          <ion-label color="medium" position="floating" translate>Face user image</ion-label>
+          <ion-input type="file" formControlName="image"></ion-input>
+        </ion-item>
+
+        <ion-text
+          color="danger"
+          [hidden]="createUserForm.controls.image.valid || createUserForm.controls.image.untouched"
+        >
+          <span class="padding-password" translate>Image incorrect</span>
+        </ion-text>
+      </ion-list>
+      <div class="ion-padding-horizontal">
+        <ion-button
+          translate
+          style="margin-top: 10%; border-radius: 50px; overflow: hidden"
+          type="submit"
+          [disabled]="createUserForm.invalid || isLoading"
+          color="primary"
+          expand="block"
+          translate
+        >
+          Create User
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

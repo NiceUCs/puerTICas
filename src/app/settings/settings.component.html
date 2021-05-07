@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button>
+        <img class="logo" height="40" src="assets/puerticas-logo-white.png" alt="angular logo" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-vertical" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">User Managements</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      <ion-label translate>Account</ion-label>
+    </ion-list-header>
+    <ion-item button>
+      <ion-icon name="person-circle" slot="start"></ion-icon>
+      <ion-label translate>Profile</ion-label>
+    </ion-item>
+    <ng-container>
+      <ion-list-header>
+        <ion-label translate>Preferences</ion-label>
+      </ion-list-header>
+      <app-language-selector type="item"></app-language-selector>
+    </ng-container>
+    <ion-item button (click)="signOut()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      <ion-label translate>Sign Out</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

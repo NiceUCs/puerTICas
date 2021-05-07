@@ -1,0 +1,38 @@
+ion-grid,
+ion-row {
+  height: 90%;
+}
+
+.login-header,
+.login-background {
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+.login-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+}
+
+.login-container {
+  background-color: var(--ion-background-color);
+  margin-top: 5%;
+  padding: 5%;
+}
+.btn_eye_icon {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  background: transparent;
+  ion-icon {
+    font-size: 22px;
+    color: #757575;
+  }
+}
+
+.btn_eye_icon:focus {
+  outline: none;
+}

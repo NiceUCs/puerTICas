@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button>
+        <img class="logo" height="40" src="assets/puerticas-logo-white.png" alt="angular logo" />
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-vertical" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Dashboard</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="ion-padding">
+    <input type="text" placeholder="Search by email" (keyup)="updateFilter($event)" />
+    <!-- Theme classes dark, material, bootstrap -->
+    <ngx-datatable
+      class="material"
+      [limit]="8"
+      [rows]="accessList"
+      [rowHeight]="50"
+      [columns]="columns"
+      [columnMode]="'force'"
+      [sortType]="'multi'"
+      [headerHeight]="50"
+      [footerHeight]="50"
+    >
+    </ngx-datatable>
+  </div>
+</ion-content>
