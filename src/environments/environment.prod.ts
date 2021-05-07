@@ -10,6 +10,9 @@ export const environment = {
   production: true,
   version: env.npm_package_version,
   serverUrl: 'https://api.chucknorris.io',
+  region: process.env.REGION,
+  userPoolId: process.env.USERPOOLID,
+  userPoolWebClientId: process.env.USERPOOLWEBCLIENTID,
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US', 'es-ES'],
 };

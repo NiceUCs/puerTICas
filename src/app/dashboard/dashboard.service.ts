@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Access } from './access-interface';
+import { USE_STORE } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,8 @@ import { Access } from './access-interface';
 export class DashboardService {
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'x-access-token': JSON.parse(localStorage.getItem('x-access-token')),
+      'Content-Type': 'application/json',
+      'x-access-token': JSON.parse(localStorage.getItem('api-jwt-token')),
     }),
   };
   private url = '/dashboard';

@@ -68,9 +68,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private getJwtToken(): Promise<string | void> {
-    return Auth.currentSession()
-      .then((session) => session.getIdToken().getJwtToken())
-      .catch((err) => console.log(err));
+    return Auth.currentSession().then((session) => {
+      sessionStorage.setItem('api-jwt-token', session.getIdToken().getJwtToken());
+    });
   }
 
   public testAPICall(): void {
