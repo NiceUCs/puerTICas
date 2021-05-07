@@ -15,8 +15,8 @@ export const environment = {
   version: env.npm_package_version + '-dev',
   serverUrl: '/api',
   region: 'us-east-1',
-  userPoolId: 'us-east-1_5K56qXFRR',
-  userPoolWebClientId: '3g2sa412bs3plm03pr1c4fieps',
+  userPoolId: 'us-east-1_ORRvyMXJK',
+  userPoolWebClientId: '2j9q9js6vfdlgfsm20n3m4lj97',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US', 'es-ES'],
 };
