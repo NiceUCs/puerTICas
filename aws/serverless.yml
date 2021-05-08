@@ -36,7 +36,7 @@ provider:
     - dynamodb:PutItem
     - dynamodb:UpdateItem
     - dynamodb:DeleteItem
-    Resource: 
+    Resource:
       - arn:aws:dynamodb:*:*:*
       - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.workersTable}
       - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.adminsTable}
@@ -47,6 +47,11 @@ provider:
       - s3:GetObject
     Resource:
       - arn:aws:s3:::${self:custom.workersImagesBucket}/*
+  # REKOGNITION
+  - Effect: Allow
+    Action:
+      - rekognition:*
+    Resource: "*"
 
 custom:
   region: us-east-1
@@ -79,7 +84,7 @@ custom:
             sources: ${self:custom.config.registersSeeder}
 
 
-  #-------------VARIABLES------------------------------------  
+  #-------------VARIABLES------------------------------------
   config: ${file(./config.yml)}
 
 functions:
@@ -165,18 +170,18 @@ resources:
           - aws.cognito.signin.user.admin
         UserPoolId:
           Ref: serviceUserPool
-        CallbackURLs: 
+        CallbackURLs:
           - https://localhost:4200
         ExplicitAuthFlows:
           - ALLOW_USER_SRP_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
         GenerateSecret: false
-        SupportedIdentityProviders: 
+        SupportedIdentityProviders:
           - COGNITO
     serviceUserPoolDomain:
-      Type: AWS::Cognito::UserPoolDomain 
+      Type: AWS::Cognito::UserPoolDomain
       Properties:
-        UserPoolId: 
+        UserPoolId:
           Ref: serviceUserPool
         Domain: ${self:service}-user-pool-domain-${self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}
     #-------------DYNAMODB------------------------------------
@@ -211,7 +216,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         BillingMode: PAY_PER_REQUEST
-    
+
     registersTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -230,7 +235,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         BillingMode: PAY_PER_REQUEST
-    
+
     #-------------S3------------------------------------
     WorkersImagesBucket:
       Type: AWS::S3::Bucket
