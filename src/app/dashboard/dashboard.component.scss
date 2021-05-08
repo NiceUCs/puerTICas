@@ -1,3 +1,9 @@
 @import "~@swimlane/ngx-datatable/index.css";
 @import "~@swimlane/ngx-datatable/themes/material.scss";
 @import "~@swimlane/ngx-datatable/assets/icons.css";
+.box {
+  border-color: #403e39;
+  border-width: thin;
+  border-style: solid;
+  border-radius: 3px;
+}

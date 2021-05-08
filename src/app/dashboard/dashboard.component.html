@@ -15,7 +15,16 @@
 </ion-header>
 <ion-content>
   <div class="ion-padding">
-    <input type="text" placeholder="Search by email" (keyup)="updateFilter($event)" />
+    <ion-item class="box">
+      <ion-input
+        type="text"
+        clearInput="true"
+        inputmode="search"
+        placeholder="Search by access"
+        (keyup)="updateFilter($event)"
+      ></ion-input>
+    </ion-item>
+
     <!-- Theme classes dark, material, bootstrap -->
     <ngx-datatable
       class="material"
