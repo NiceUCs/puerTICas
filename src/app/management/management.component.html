@@ -22,14 +22,14 @@
 
     <ion-item *ngFor="let user of usersList">
       <ion-avatar slot="start">
-        <img src="{{ user.image }}" />
+        <img src="{{ user.data.image }}" />
       </ion-avatar>
       <ion-label>
         <h2>
-          <b>{{ user.name }} {{ user.surname }}</b>
+          <b>{{ user.data.name }} {{ user.data.surname }}</b>
         </h2>
-        <h3>DNI: {{ user.dni }}</h3>
-        <h3>Phone: {{ user.phone }}</h3>
+        <h3>DNI: {{ user.data.dni }}</h3>
+        <h3>Phone: {{ user.data.phone }}</h3>
       </ion-label>
       <ion-button expand="block" (click)="openCreateUserModal(user)">
         <ion-icon name="create-outline"></ion-icon>

@@ -22,12 +22,14 @@ export class ManagementComponent implements OnInit {
 
   ngOnInit() {}
 
+  //Create user list
   createUserList() {
     this.managementService.getUsers().subscribe((usersData) => {
       this.usersList = usersData;
     });
   }
 
+  //Refresh the users
   refreshUserList(event: any) {
     setTimeout(() => {
       this.managementService.getUsers().subscribe((usersData) => {
@@ -37,6 +39,7 @@ export class ManagementComponent implements OnInit {
     }, 2000);
   }
 
+  //Delte user from list
   deleteUser(user: User) {
     this.usersList = this.usersList.filter((obj) => obj !== user);
     this.managementService.deleteUser(user).subscribe(() => {
@@ -44,16 +47,20 @@ export class ManagementComponent implements OnInit {
     });
   }
 
+  //Add user from list
   addUser(user: User) {
     this.usersList.push({
       email: user.email,
-      name: user.name,
-      surname: user.surname,
-      dni: user.dni,
-      phone: user.phone,
-      image: user.image,
-      born: user.born,
+      data: {
+        name: user.data.name,
+        surname: user.data.surname,
+        dni: user.data.dni,
+        phone: user.data.phone,
+        image: user.data.image,
+        born: user.data.born,
+      },
     });
+    console.log(this.usersList);
   }
 
   //Modal to create user

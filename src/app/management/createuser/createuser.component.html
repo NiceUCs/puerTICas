@@ -66,7 +66,7 @@
               <ion-label color="medium" position="floating" translate>Phone</ion-label>
               <ion-input
                 clearInput
-                type="number"
+                type="text"
                 pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
                 formControlName="phone"
                 autocomplete="phone"
@@ -101,8 +101,9 @@
         </ion-row>
 
         <ion-item lines="inset">
-          <ion-label color="medium" position="floating" translate>Face user image</ion-label>
-          <ion-input type="file" formControlName="image"></ion-input>
+          <ion-label color="medium" position="stacked" translate>Face user image</ion-label>
+          <ion-input type="file" (change)="onFileSelected($event)" formControlName="image"></ion-input>
+          <ion-img [src]="userImage"></ion-img>
         </ion-item>
 
         <ion-text

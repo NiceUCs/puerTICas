@@ -18,13 +18,14 @@ import { User } from '.././user-interface';
   styleUrls: ['./createuser.component.scss'],
 })
 export class CreateUserComponent implements OnInit {
+  @Input() user: any | null;
+
   createUserForm!: FormGroup;
-  passwordTypeInput = 'password';
+  userImage = '';
   addUser = this.navParams.get('addUser');
   deleteUser = this.navParams.get('deleteUser');
   isLoading = false;
   error: string | undefined;
-  @Input() user: any | null;
 
   constructor(
     public modalController: ModalController,
@@ -40,24 +41,41 @@ export class CreateUserComponent implements OnInit {
   ngOnInit(): void {
     this.createForm();
   }
+
+  //Close the modal
   dismiss() {
-    // using the injected ModalController this page
-    // can "dismiss" itself and optionally pass back data
     this.modalController.dismiss({
       dismissed: true,
     });
   }
+  onFileSelected(event: any) {
+    let me = this;
+    let file = event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      me.createUserForm.value.image = reader.result;
+      //console.log(reader.result);
+    };
+    reader.onerror = function (error) {
+      console.log('Error: ', error);
+    };
+  }
 
+  //Submit the form to create the user
   createUser() {
+    console.log(this.createUserForm.value.image);
     this.isLoading = true;
     let user: User = {
       email: this.createUserForm.value.email,
-      dni: this.createUserForm.value.dni,
-      name: this.createUserForm.value.name,
-      surname: this.createUserForm.value.surname,
-      phone: this.createUserForm.value.phone,
-      born: this.createUserForm.value.born,
-      image: this.createUserForm.value.image,
+      data: {
+        dni: this.createUserForm.value.dni,
+        name: this.createUserForm.value.name,
+        surname: this.createUserForm.value.surname,
+        phone: this.createUserForm.value.phone,
+        born: this.createUserForm.value.born,
+        image: this.createUserForm.value.image,
+      },
     };
 
     this.managementService.createUser(user).subscribe(() => {
@@ -69,6 +87,7 @@ export class CreateUserComponent implements OnInit {
     });
   }
 
+  //Create the initial form
   private createForm() {
     if (this.user == (null || undefined)) {
       this.createUserForm = this.formBuilder.group({
@@ -81,14 +100,15 @@ export class CreateUserComponent implements OnInit {
         image: ['', Validators.required],
       });
     } else {
+      this.userImage = this.user.data.image ? this.user.data.image : '.././assets/puerticas-logo-white.png';
       this.createUserForm = this.formBuilder.group({
         email: [this.user.email, Validators.required],
-        dni: [this.user.dni, Validators.required],
-        name: [this.user.name, Validators.required],
-        surname: [this.user.surname, Validators.required],
-        phone: [this.user.phone, Validators.required],
-        born: [this.user.born, Validators.required],
-        image: [this.user.image, Validators.required],
+        dni: [this.user.data.dni, Validators.required],
+        name: [this.user.data.name, Validators.required],
+        surname: [this.user.data.surname, Validators.required],
+        phone: [this.user.data.phone, Validators.required],
+        born: [this.user.data.born, Validators.required],
+        image: [this.user.data.image, Validators.required],
       });
     }
   }
