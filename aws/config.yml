@@ -2,9 +2,6 @@
 workersTableName: Workers
 workersSeeder: [./seeds/workers.json]
 
-adminsTableName: Admins
-adminsSeeder: [./seeds/admins.json]
-
 registersTableName: Registers
 registersSeeder: [./seeds/registers.json]
 

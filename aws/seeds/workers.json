@@ -1,10 +1,13 @@
 [
     {
         "email": "worker1@worker.com",
-        "role": "worker",
         "data": {
             "name": "worker1",
-            "password": "password"
+            "surname": "worker1",
+            "dni": "123456789A",
+            "phone": "+34600600600",
+            "image": "url",
+            "born": "1998"
         }
     }
 ]

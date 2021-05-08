@@ -8,8 +8,8 @@ import boto3
 
 from lambdas.admins.admins_controller import (
     get_users,
-    register,
-    #login,
+    create_user,
+    delete_user,
     get_analytics,
 )
 
@@ -39,7 +39,7 @@ def h_get_users(event, context):
     return response
 
 
-def h_register(event, context):
+def h_delete_user(event, context):
 
     response = {
         "headers": {"Access-Control-Allow-Origin": "*"},
@@ -53,7 +53,7 @@ def h_register(event, context):
         data = event["body"] if "body" in event else None
         data = json.loads(data) if data else None
 
-        result = register(data)
+        result = delete_user(data)
 
         response.update({"body": json.dumps(result, cls=DecimalEncoder)})
 
@@ -63,8 +63,7 @@ def h_register(event, context):
 
     return response
 
-
-""" def h_login(event, context):
+def h_create_user(event, context):
     
     response = {
         "headers": {"Access-Control-Allow-Origin": "*"},
@@ -78,7 +77,7 @@ def h_register(event, context):
         data = event["body"] if "body" in event else None
         data = json.loads(data) if data else None
 
-        result = login()
+        result = create_user(data)
 
         response.update({"body": json.dumps(result, cls=DecimalEncoder)})
 
@@ -86,8 +85,7 @@ def h_register(event, context):
         print("> Error: %s" % e)
         response.update({"statusCode": 500, "body": "Internal Error: %s" % e})
 
-    return response """
-
+    return response
 
 def h_get_analytics(event, context):
 
