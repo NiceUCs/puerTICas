@@ -127,7 +127,7 @@ resources:
     serviceUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: puerticas-user-pool-${self:provider.stage}
+        UserPoolName: ${self:service}-user-pool
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
@@ -148,7 +148,7 @@ resources:
     serviceUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: ${self:service}-user-pool-client-${self:provider.stage}
+        ClientName: ${self:service}-user-pool-client
         AllowedOAuthFlows:
           - implicit
         AllowedOAuthFlowsUserPoolClient: true
@@ -173,7 +173,7 @@ resources:
       Properties:
         UserPoolId: 
           Ref: serviceUserPool
-        Domain: ${self:service}-user-pool-domain-${self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}
+        Domain: ${self:service}-user-pool-domain--${self:provider.environment.DOMAIN_SUFFIX}
     #-------------DYNAMODB------------------------------------
     workersTable:
       Type: AWS::DynamoDB::Table
