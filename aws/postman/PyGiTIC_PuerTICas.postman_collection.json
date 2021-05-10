@@ -45,13 +45,13 @@
 					"response": []
 				},
 				{
-					"name": "{{aws_url}}/admins/login",
+					"name": "{{aws_url}}/admins/delete_user",
 					"request": {
-						"method": "POST",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \r\n}",
+							"raw": "{\r\n    \"email\":\"{{email}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,31 +59,40 @@
 							}
 						},
 						"url": {
-							"raw": "{{aws_url}}/admins/login",
+							"raw": "{{aws_url}}/admins/delete_user",
 							"host": [
 								"{{aws_url}}"
 							],
 							"path": [
 								"admins",
-								"login"
+								"delete_user"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "{{aws_url}}/admins/register",
+					"name": "{{aws_url}}/admins/create_user",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"{{email}}\",\r\n    \"data\":{\r\n        \"name\":\"workerName\",\r\n        \"surname\":\"workerSurname\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{aws_url}}/admins/register",
+							"raw": "{{aws_url}}/admins/create_user",
 							"host": [
 								"{{aws_url}}"
 							],
 							"path": [
 								"admins",
-								"register"
+								"create_user"
 							]
 						}
 					},
@@ -101,7 +110,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"image\":\"base64/jdalsdjkasldakds\"\r\n}",
+							"raw": "{\r\n    \"email\":\"worker1@worker.com\",\r\n    \"image\":\"base64/jdalsdjkasldakds\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
