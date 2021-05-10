@@ -9,8 +9,9 @@ aws_region = os.environ.get('AWS_REGION')
 workers_table = os.environ['WORKERS_TABLE']
 registers_table = os.environ['REGISTERS_TABLE']
 workers_images_bucket = os.environ['WORKERS_IMAGES_BUCKET']
+env = os.environ['ENDPOINT']
 
-if local in os.environ:
+if env == "[object Object]":
     dynamodb = boto3.resource(
         "dynamodb",
         endpoint_url="http://localhost:8000",
@@ -18,25 +19,16 @@ if local in os.environ:
         aws_secret_access_key="bar",
         verify=False,
     )
-else:
-    dynamodb_resource = boto3.resource('dynamodb', region_name=aws_region)
+else:  # prod
+    dynamodb = boto3.resource('dynamodb', region_name=aws_region)
 
-dybamodb_workers_table = dynamodb_resource.Table(workers_table)
-dybamodb_registers_table = dynamodb_resource.Table(registers_table)
-
-dynamodb = boto3.resource(
-    "dynamodb",
-    endpoint_url="http://localhost:8000",
-    aws_access_key_id="foo",
-    aws_secret_access_key="bar",
-    verify=False,
-)
+dybamodb_workers_table = dynamodb.Table(workers_table)
+dybamodb_registers_table = dynamodb.Table(registers_table)
 
 
 def get_users():
     try:
-        #result = dybamodb_workers_table.scan()
-        result = dynamodb.Table(workers_table).scan()
+        result = dybamodb_workers_table.scan()
         response = result["Items"]
         return response
 
@@ -48,7 +40,6 @@ def create_user(data):
     try:
         item = {
             "email": data["email"],
-            "role": data["role"],
             "data": data["data"],
         }
 
@@ -64,21 +55,18 @@ def create_user(data):
 
 def delete_user(data):
     try:
-        result = dybamodb_workers_table.query(
-            KeyConditionExpression=Key("email").eq(data["email"]))
-        user = result["Items"][0]
         # delete the user from the database
-        table.delete_item(
-            Key={"email": user["email"]}
+        dybamodb_workers_table.delete_item(
+            Key={"email": data["email"]}
         )
-        response = {"Delete": True, "data": user}
+        response = {"Delete": True, "data": data}
         return response
 
     except Exception as e:
         raise HTTPError(500, "Internal Error: %s" % e)
 
 
-def get_analytics(data):
+def get_analytics():
     try:
         result = dybamodb_registers_table.scan()
         response = result["Items"]

@@ -1,3 +1,4 @@
 .dynamodb
 node_modules
 *__pycache__*
+.serverless

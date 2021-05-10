@@ -8,8 +8,9 @@ from tools.http_error import HTTPError
 aws_region = os.environ.get('AWS_REGION')
 workers_table = os.environ['WORKERS_TABLE']
 workers_images_bucket = os.environ['WORKERS_IMAGES_BUCKET']
+env = os.environ['ENDPOINT']
 
-if local in os.environ:
+if env == "[object Object]":
     dynamodb = boto3.resource(
         "dynamodb",
         endpoint_url="http://localhost:8000",
@@ -17,11 +18,10 @@ if local in os.environ:
         aws_secret_access_key="bar",
         verify=False,
     )
-else:
-    dynamodb_resource = boto3.resource('dynamodb', region_name=aws_region)
+else: # prod
+    dynamodb = boto3.resource('dynamodb', region_name=aws_region)
 
-dynamodb_resource = boto3.resource('dynamodb', region_name=aws_region)
-dybamodb_workers_table = dynamodb_resource.Table(workers_table)
+dybamodb_workers_table = dynamodb.Table(workers_table)
 
 def identify(data):
     try:

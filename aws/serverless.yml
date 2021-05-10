@@ -5,14 +5,9 @@ frameworkVersion: '2'
 package:
   exclude:
     - ./**
-    - node_modules/**
-    - postman/**
-    - seeds/**
-    - serverless.md
-    - package.json
-    - package-lock.json
-  #include:
-  #  - functions/**
+  include:
+    - lambdas/**
+    - tools/**
 
 provider:
   name: aws
@@ -23,6 +18,10 @@ provider:
     REGISTERS_TABLE: ${self:custom.registersTable}
     WORKERS_IMAGES_BUCKET: ${self:custom.workersImagesBucket}
     DOMAIN_SUFFIX: puerticas-com
+    ENDPOINT:
+      Fn::GetAtt:
+      - ApiGatewayRestApi
+      - RootResourceId
   apiGateway:
     shouldStartNameWithService: true
 
@@ -80,7 +79,7 @@ custom:
 functions:
   #-------------ADMINS------------------------------------
   get_users:
-    handler: lambdas.admins.handler_admins.h_get_users
+    handler: lambdas/admins/handler_admins.h_get_users
     events:
       - http:
           path: ${self:custom.config.apiUrls.admins}/get_users
@@ -89,7 +88,7 @@ functions:
           #authorizer:
 
   get_analytics:
-    handler: lambdas.admins.handler_admins.h_get_analytics
+    handler: lambdas/admins/handler_admins.h_get_analytics
     events:
       - http:
           path: ${self:custom.config.apiUrls.admins}/get_analytics
@@ -97,14 +96,14 @@ functions:
           cors: true
 
   create_user:
-    handler: lambdas.admins.handler_admins.h_create_user
+    handler: lambdas/admins/handler_admins.h_create_user
     events:
       - http:
           path: ${self:custom.config.apiUrls.admins}/create_user
           method: post
           cors: true
   delete_user:
-    handler: lambdas.admins.handler_admins.h_delete_user
+    handler: lambdas/admins/handler_admins.h_delete_user
     events:
       - http:
           path: ${self:custom.config.apiUrls.admins}/delete_user
@@ -113,7 +112,7 @@ functions:
 
   #-------------WORKERS------------------------------------
   identify:
-    handler: lambdas.workers.handler_workers.h_identify
+    handler: lambdas/workers/handler_workers.h_identify
     events:
       - http:
           path: ${self:custom.config.apiUrls.workers}/identify
@@ -190,7 +189,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        BillingMode: PAY_PER_REQUEST
+      #  BillingMode: PAY_PER_REQUEST
     
     registersTable:
       Type: AWS::DynamoDB::Table
@@ -209,7 +208,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        BillingMode: PAY_PER_REQUEST
+      #  BillingMode: PAY_PER_REQUEST
     
     #-------------S3------------------------------------
     WorkersImagesBucket:

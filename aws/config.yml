@@ -6,7 +6,7 @@ registersTableName: Registers
 registersSeeder: [./seeds/registers.json]
 
 #-------------S3------------------------------------ 
-workersImagesBucketName: workersImagesBucket
+workersImagesBucketName: workersimagesbucket
 
 #-------------API GATEWAY------------------------------------ 
 apiUrls:
