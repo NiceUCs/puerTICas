@@ -31,7 +31,7 @@ def identify(data):
 
 	s3 = boto3.client('s3', region_name = aws_region)
 	rekognition = boto3.client('rekognition', region_name = aws_region)
-        
+
 	allowed = False
 	response = {}
 
@@ -41,9 +41,10 @@ def identify(data):
 		)
 		keys = [obj['Key'] for obj in imagesInBucket['Contents']]
 
-		objSource = json.loads(data['Body'].read().decode('utf-8'))
-		imageSourceB64 = objSource['image']
-		imageSource = base64.b64decode(imageSourceB64)
+		objSource = json.loads(data.read().decode('utf-8')) # Si ya me viene el body
+		# objSource = json.loads(data['Body'].read().decode('utf-8'))
+		# imageSourceB64 = objSource['image']
+		imageSource = base64.b64decode(objSource['image'])
 
 		for key in keys:
 			obj = s3.get_object(Bucket=workers_images_bucket, Key=key)
@@ -84,7 +85,7 @@ def identify(data):
 		else:
 			response['Authorized'] = False
 
-        return response 
+        return response
 
     except Exception as e:
         raise HTTPError(500, 'Internal Error: %s' % e)
@@ -103,6 +104,5 @@ def identify(data):
 		response['User'] = result['Item']
 	else:
 		response['Authorized'] = False
-	
+
 	return(response) """
-		
