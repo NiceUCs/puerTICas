@@ -8,6 +8,7 @@ import boto3
 
 from lambdas.admins.controller_admins import (
     get_users,
+    get_user_image,
     create_user,
     delete_user,
     get_analytics,
@@ -29,6 +30,29 @@ def h_get_users(event, context):
         data = json.loads(data) if data else None
 
         result = get_users()
+
+        response.update({"body": json.dumps(result, cls=DecimalEncoder)})
+
+    except Exception as e:
+        print("> Error: %s" % e)
+        response.update({"statusCode": 500, "body": "Internal Error: %s" % e})
+
+    return response
+
+def h_get_user_image(event, context):
+
+    response = {
+        "headers": {"Access-Control-Allow-Origin": "*"},
+        "statusCode": 200,
+        "body": None,
+    }
+
+    try:
+        headers = event["headers"] if "headers" in event else None
+
+        data = event["pathParameters"] if "pathParameters" in event else None
+
+        result = get_user_image(data)
 
         response.update({"body": json.dumps(result, cls=DecimalEncoder)})
 

@@ -45,6 +45,18 @@ def get_users():
     except Exception as e:
         raise HTTPError(500, 'Internal Error: %s' % e)
 
+def get_user_image(data):
+    try: 
+        s3_hl = boto3.resource('s3') 
+        bucket = s3_hl.Bucket(workers_images_bucket)
+        image = bucket.Object(data["email"])
+        img_data = image.get().get('Body').read()
+        response = base64.b64encode(img_data).decode('ascii')
+        return response
+
+    except Exception as e:
+        raise HTTPError(500, 'Internal Error: %s' % e)
+
 
 def create_user(data):
     try:
