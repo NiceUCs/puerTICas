@@ -38,7 +38,6 @@ export class ManagementService {
    * @returns for all the users: email, dni, name, surname, phone, born and image
    */
   getUsers(): Observable<any> {
-    //return this.http.get<any>('http://localhost:4200/assets/data/users.json');
     return this.http.get<any>(this.url + '/get_users', this.httpOptions);
   }
 

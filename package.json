@@ -36,6 +36,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@swimlane/ngx-datatable": "^19.0.0",
     "aws-amplify": "^3.3.27",
+    "aws-sdk": "^2.906.0",
     "com-badrit-base64": "^0.2.0",
     "graphql": "^15.5.0",
     "highcharts": "^9.1.0",
