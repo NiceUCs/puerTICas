@@ -41,6 +41,10 @@ export class ManagementService {
     return this.http.get<any>(this.url + '/get_users', this.httpOptions);
   }
 
+  getUserImages(email: any): Observable<any> {
+    return this.http.get<any>(this.url + '/get_user_image/' + email, this.httpOptions);
+  }
+
   /**
    * POST a user
    * @param user interface of user defined in /management/user-interface.ts

@@ -22,7 +22,7 @@
 
     <ion-item *ngFor="let user of usersList">
       <ion-avatar slot="start">
-        <img src="{{ user.data.image }}" />
+        <img src="data:image/png;base64,{{ user.data.image }}" />
       </ion-avatar>
       <ion-label>
         <h2>

@@ -103,7 +103,7 @@
         <ion-item lines="inset">
           <ion-label color="medium" position="stacked" translate>Face user image</ion-label>
           <ion-input type="file" (change)="onFileSelected($event)" formControlName="image"></ion-input>
-          <ion-img [src]="userImage"></ion-img>
+          <ion-img src="data:image/png;base64,{{ userImage }}"></ion-img>
         </ion-item>
 
         <ion-text
