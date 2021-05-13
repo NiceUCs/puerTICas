@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { CreateUserComponent } from './createuser/createuser.component';
 import { EmailValidator } from '@angular/forms';
 
@@ -16,7 +16,11 @@ export class ManagementComponent implements OnInit {
   isLoading = false;
 
   usersList: User[] = [];
-  constructor(public modalController: ModalController, private managementService: ManagementService) {
+  constructor(
+    public modalController: ModalController,
+    public toastController: ToastController,
+    private managementService: ManagementService
+  ) {
     this.createUserList();
   }
 
@@ -41,10 +45,14 @@ export class ManagementComponent implements OnInit {
 
   //Delte user from list
   deleteUser(user: User) {
-    this.usersList = this.usersList.filter((obj) => obj !== user);
+    this.deleteUserFromList(user);
     this.managementService.deleteUser(user).subscribe(() => {
-      console.log('User deleted');
+      this.deteleWorkerToast();
     });
+  }
+
+  deleteUserFromList(user: User) {
+    this.usersList = this.usersList.filter((obj) => obj !== user);
   }
 
   //Add user from list
@@ -75,5 +83,14 @@ export class ManagementComponent implements OnInit {
       },
     });
     return await modal.present();
+  }
+
+  async deteleWorkerToast() {
+    const toast = await this.toastController.create({
+      message: 'Worker deleted',
+      duration: 2000,
+      color: 'primary',
+    });
+    toast.present();
   }
 }

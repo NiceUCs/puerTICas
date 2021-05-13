@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams, ToastController } from '@ionic/angular';
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -35,7 +35,8 @@ export class CreateUserComponent implements OnInit {
     private platform: Platform,
     private loadingController: LoadingController,
     private managementService: ManagementService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    public toastController: ToastController
   ) {}
 
   ngOnInit(): void {
@@ -79,9 +80,11 @@ export class CreateUserComponent implements OnInit {
     };
 
     this.managementService.createUser(user).subscribe(() => {
-      console.log('user added');
       if (this.user != (null || undefined)) {
-        this.deleteUser.deleteUser(this.user);
+        this.deleteUser.deleteUserFromList(this.user);
+        this.updateWorkerToast();
+      } else {
+        this.createWorkerToast();
       }
       this.addUser.addUser(user);
       this.dismiss();
@@ -112,5 +115,23 @@ export class CreateUserComponent implements OnInit {
         image: [this.user.data.image, Validators.required],
       });
     }
+  }
+
+  async updateWorkerToast() {
+    const toast = await this.toastController.create({
+      message: 'Worker updated',
+      duration: 2000,
+      color: 'primary',
+    });
+    toast.present();
+  }
+
+  async createWorkerToast() {
+    const toast = await this.toastController.create({
+      message: 'Worker created',
+      duration: 2000,
+      color: 'primary',
+    });
+    toast.present();
   }
 }

@@ -67,6 +67,6 @@ export class ManagementService {
       },
     });
 
-    return this.http.delete<any>(this.url + '/delete_user' + user.email, this.httpOptions);
+    return this.http.delete<any>(this.url + '/delete_user/' + user.email, this.httpOptions);
   }
 }
