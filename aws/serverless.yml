@@ -1,6 +1,6 @@
 service: puerticas
 
-frameworkVersion: '2'
+frameworkVersion: "2"
 
 package:
   exclude:
@@ -20,30 +20,40 @@ provider:
     DOMAIN_SUFFIX: puerticas-com
     ENDPOINT:
       Fn::GetAtt:
-      - ApiGatewayRestApi
-      - RootResourceId
+        - ApiGatewayRestApi
+        - RootResourceId
   apiGateway:
     shouldStartNameWithService: true
 
   iamRoleStatements:
-  - Effect: Allow
-    Action:
-    - dynamodb:Query
-    - dynamodb:Scan
-    - dynamodb:GetItem
-    - dynamodb:PutItem
-    - dynamodb:UpdateItem
-    - dynamodb:DeleteItem
-    Resource: 
-      - arn:aws:dynamodb:*:*:*
-      - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.workersTable}
-      - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.registersTable}
-  - Effect: Allow
-    Action:
-      - s3:PutObject
-      - s3:GetObject
-    Resource:
-      - arn:aws:s3:::${self:custom.workersImagesBucket}/*
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - arn:aws:dynamodb:*:*:*
+        - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.workersTable}
+        - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.registersTable}
+    - Effect: Allow
+      Action:
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::${self:custom.workersImagesBucket}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:DeleteObject
+      Resource:
+        - arn:aws:s3:::${self:custom.workersImagesBucket}/*
+    - Effect: Allow
+      Action:
+        - rekognition:*
+      Resource: "*"
 
 custom:
   region: us-east-1
@@ -72,8 +82,7 @@ custom:
           - table: ${self:custom.registersTable}
             sources: ${self:custom.config.registersSeeder}
 
-
-  #-------------VARIABLES------------------------------------  
+  #-------------VARIABLES------------------------------------
   config: ${file(./config.yml)}
 
 functions:
@@ -106,7 +115,7 @@ functions:
     handler: lambdas/admins/handler_admins.h_delete_user
     events:
       - http:
-          path: ${self:custom.config.apiUrls.admins}/delete_user
+          path: ${self:custom.config.apiUrls.admins}/delete_user/{email}
           method: delete
           cors: true
 
@@ -116,13 +125,13 @@ functions:
     events:
       - http:
           path: ${self:custom.config.apiUrls.workers}/identify
-          method: get
+          method: post
           cors: true
+
 #-------------------RESOURCES-----------------------
 resources:
-
   Resources:
-#--------------------COGNITO---------------
+    #--------------------COGNITO---------------
     serviceUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
@@ -159,18 +168,18 @@ resources:
           - aws.cognito.signin.user.admin
         UserPoolId:
           Ref: serviceUserPool
-        CallbackURLs: 
+        CallbackURLs:
           - https://localhost:4200
         ExplicitAuthFlows:
           - ALLOW_USER_SRP_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
         GenerateSecret: false
-        SupportedIdentityProviders: 
+        SupportedIdentityProviders:
           - COGNITO
     serviceUserPoolDomain:
-      Type: AWS::Cognito::UserPoolDomain 
+      Type: AWS::Cognito::UserPoolDomain
       Properties:
-        UserPoolId: 
+        UserPoolId:
           Ref: serviceUserPool
         Domain: ${self:service}-user-pool-domain--${self:provider.environment.DOMAIN_SUFFIX}
     #-------------DYNAMODB------------------------------------
@@ -190,7 +199,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
       #  BillingMode: PAY_PER_REQUEST
-    
+
     registersTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -209,7 +218,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
       #  BillingMode: PAY_PER_REQUEST
-    
+
     #-------------S3------------------------------------
     WorkersImagesBucket:
       Type: AWS::S3::Bucket

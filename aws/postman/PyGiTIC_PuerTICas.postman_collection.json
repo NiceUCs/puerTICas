@@ -51,7 +51,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"{{email}}\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,13 +59,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{aws_url}}/admins/delete_user",
+							"raw": "{{aws_url}}/admins/delete_user/{{email}}",
 							"host": [
 								"{{aws_url}}"
 							],
 							"path": [
 								"admins",
-								"delete_user"
+								"delete_user",
+								"{{email}}"
 							]
 						}
 					},
@@ -78,7 +79,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"{{email}}\",\r\n    \"data\":{\r\n        \"name\":\"workerName\",\r\n        \"surname\":\"workerSurname\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"email\":\"{{email}}\",\r\n    \"data\":{\r\n        \"name\":\"workerName\",\r\n        \"surname\":\"workerSurname\",\r\n        \"image\":\"{{workers_image_base64}}\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +111,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"worker1@worker.com\",\r\n    \"image\":\"base64/jdalsdjkasldakds\"\r\n}",
+							"raw": "{\r\n    \"image\":\"{{workers_image_base64}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

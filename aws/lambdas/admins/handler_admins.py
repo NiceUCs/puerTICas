@@ -50,8 +50,7 @@ def h_delete_user(event, context):
     try:
         headers = event["headers"] if "headers" in event else None
 
-        data = event["body"] if "body" in event else None
-        data = json.loads(data) if data else None
+        data = event["pathParameters"] if "pathParameters" in event else None
 
         result = delete_user(data)
 
