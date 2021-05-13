@@ -13,10 +13,10 @@ export class DashboardService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      'x-access-token': JSON.parse(localStorage.getItem('api-jwt-token')),
+      //'x-access-token': JSON.parse(localStorage.getItem('api-jwt-token')),
     }),
   };
-  private url = '/dashboard';
+  private url = '/admins';
 
   constructor(private http: HttpClient) {}
 
@@ -26,7 +26,7 @@ export class DashboardService {
    * @returns for all the users: email, name, surname and access date
    */
   getAccess(): Observable<any> {
-    return this.http.get<any>('http://localhost:4200/assets/data/access.json');
+    return this.http.get<any>(this.url + '/get_analytics', this.httpOptions);
     //return this.http.get<any>(this.url + '/access', prms1, this.httpOptions);
   }
 }

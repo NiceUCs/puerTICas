@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(DatatableComponent) myFilterTable: DatatableComponent;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(public dashboardService: DashboardService) {}
 
   ngOnInit() {
     this.createAccessList();

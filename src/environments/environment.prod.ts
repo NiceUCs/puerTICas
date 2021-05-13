@@ -9,7 +9,7 @@ import { env } from './.env';
 export const environment = {
   production: true,
   version: env.npm_package_version,
-  serverUrl: 'https://api.chucknorris.io',
+  serverUrl: 'https://vnp82wz25f.execute-api.us-east-1.amazonaws.com/dev',
   region: 'us-east-1',
   userPoolId: 'us-east-1_5K56qXFRR',
   userPoolWebClientId: '3g2sa412bs3plm03pr1c4fieps',

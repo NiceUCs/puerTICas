@@ -9,10 +9,13 @@ import { User } from './user-interface';
   providedIn: 'root',
 })
 export class ManagementService {
-  /*httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded', 'x-access-token': JSON.parse(localStorage.getItem('x-access-token')) }),
-  };*/
-  private url = 'users/create';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      //'x-access-token': JSON.parse(localStorage.getItem('api-jwt-token')),
+    }),
+  };
+  private url = '/admins';
 
   constructor(private http: HttpClient) {}
 
@@ -22,17 +25,18 @@ export class ManagementService {
    * @returns JSON with correct or incorrect status
    */
   createUser(user: any): Observable<any> {
-    const prms1 = JSON.stringify({
+    const body = JSON.stringify({
       email: user.email,
-      dni: user.dni,
-      name: user.name,
-      surname: user.surname,
-      phone: user.phone,
-      born: user.born,
-      image: user.image,
+      data: {
+        dni: user.dni,
+        name: user.name,
+        surname: user.surname,
+        phone: user.phone,
+        born: user.born,
+        image: user.image,
+      },
     });
-    return of('dummy').pipe(delay(1000));
-    //return this.http.post<any>(this.url + '/agregar', prms1/*, this.httpOptions*/);
+    return this.http.post<any>(this.url + '/create_user', body, this.httpOptions);
   }
 
   /**
@@ -41,8 +45,8 @@ export class ManagementService {
    * @returns for all the users: email, dni, name, surname, phone, born and image
    */
   getUsers(): Observable<any> {
-    return this.http.get<any>('http://localhost:4200/assets/data/users.json');
-    //return this.http.get<any>(this.url + '/agregar', prms1/*, this.httpOptions*/);
+    //return this.http.get<any>('http://localhost:4200/assets/data/users.json');
+    return this.http.get<any>(this.url + '/get_users', this.httpOptions);
   }
 
   /**
@@ -51,16 +55,18 @@ export class ManagementService {
    * @returns JSON with correct or incorrect status
    */
   deleteUser(user: any): Observable<any> {
-    const prms1 = JSON.stringify({
+    const body = JSON.stringify({
       email: user.email,
-      dni: user.dni,
-      name: user.name,
-      surname: user.surname,
-      phone: user.phone,
-      born: user.born,
-      image: user.image,
+      data: {
+        dni: user.dni,
+        name: user.name,
+        surname: user.surname,
+        phone: user.phone,
+        born: user.born,
+        image: user.image,
+      },
     });
-    return of('dummy').pipe(delay(1000));
-    //return this.http.delete<any>(this.url + '/agregar', prms1/*, this.httpOptions*/);
+
+    return this.http.delete<any>(this.url + '/delete_user' + user.email, this.httpOptions);
   }
 }

@@ -13,10 +13,11 @@ import { env } from './.env';
 export const environment = {
   production: false,
   version: env.npm_package_version + '-dev',
-  serverUrl: '/api',
+  //serverUrl: '/api',
+  serverUrl: 'https://vnp82wz25f.execute-api.us-east-1.amazonaws.com/dev',
   region: 'us-east-1',
-  userPoolId: 'us-east-1_ORRvyMXJK',
-  userPoolWebClientId: '2j9q9js6vfdlgfsm20n3m4lj97',
+  userPoolId: 'us-east-1_ET2XCCtKe',
+  userPoolWebClientId: '3m3dildk65ovivev3kb88ulm2o',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US', 'es-ES'],
 };

@@ -80,8 +80,9 @@ export class CreateUserComponent implements OnInit {
 
     this.managementService.createUser(user).subscribe(() => {
       console.log('user added');
-      //LLAMADA AL SERVICIO PARA CREAR UN USUARIO
-      this.deleteUser.deleteUser(this.user);
+      if (this.user != (null || undefined)) {
+        this.deleteUser.deleteUser(this.user);
+      }
       this.addUser.addUser(user);
       this.dismiss();
     });
