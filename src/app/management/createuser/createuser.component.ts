@@ -55,8 +55,8 @@ export class CreateUserComponent implements OnInit {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      me.createUserForm.value.image = reader.result;
-      //console.log(reader.result);
+      console.log(reader.result.toString().split(',')[1]),
+        (me.createUserForm.value.image = reader.result.toString().split(',')[1]);
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);
@@ -65,7 +65,6 @@ export class CreateUserComponent implements OnInit {
 
   //Submit the form to create the user
   createUser() {
-    console.log(this.createUserForm.value.image);
     this.isLoading = true;
     let user: User = {
       email: this.createUserForm.value.email,
@@ -78,7 +77,6 @@ export class CreateUserComponent implements OnInit {
         image: this.createUserForm.value.image,
       },
     };
-
     this.managementService.createUser(user).subscribe(() => {
       if (this.user != (null || undefined)) {
         this.deleteUser.deleteUserFromList(this.user);

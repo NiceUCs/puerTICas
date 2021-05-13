@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
 
   createAccessList() {
     this.dashboardService.getAccess().subscribe((accessData) => {
+      console.log(accessData);
       console.log(accessData[0].email);
       this.accessList = accessData;
 

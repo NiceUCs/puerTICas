@@ -27,14 +27,7 @@ export class ManagementService {
   createUser(user: any): Observable<any> {
     const body = JSON.stringify({
       email: user.email,
-      data: {
-        dni: user.dni,
-        name: user.name,
-        surname: user.surname,
-        phone: user.phone,
-        born: user.born,
-        image: user.image,
-      },
+      data: user.data,
     });
     return this.http.post<any>(this.url + '/create_user', body, this.httpOptions);
   }
