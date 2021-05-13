@@ -15,8 +15,10 @@ provider:
   region: ${self:custom.region}
   environment:
     WORKERS_TABLE: ${self:custom.workersTable}
+    WORKERS_TABLE_GSI: ${self:custom.workersTableGSI}
     REGISTERS_TABLE: ${self:custom.registersTable}
     WORKERS_IMAGES_BUCKET: ${self:custom.workersImagesBucket}
+    WORKERS_REKOGNITION_COLLECTION: ${self:custom.workersRekognitionCollection}
     DOMAIN_SUFFIX: puerticas-com
     ENDPOINT:
       Fn::GetAtt:
@@ -57,8 +59,9 @@ provider:
 
 custom:
   region: us-east-1
-
+  workersRekognitionCollection: ${self:custom.config.workersRekognitionCollection}
   workersTable: ${self:service}-${self:custom.config.workersTableName}.${self:custom.region}.es
+  workersTableGSI: ${self:custom.config.workersTableGSI}
   registersTable: ${self:service}-${self:custom.config.registersTableName}.${self:custom.region}.es
 
   workersImagesBucket: ${self:service}-${self:custom.config.workersImagesBucketName}.${self:custom.region}.es
@@ -190,14 +193,26 @@ resources:
         AttributeDefinitions:
           - AttributeName: email
             AttributeType: S
-          #- AttributeName: image_url
-          #  AttributeType: S
+          - AttributeName: RekognitionId
+            AttributeType: S
         KeySchema:
           - AttributeName: email
             KeyType: HASH
+        #  - AttributeName: RekognitionId
+        #    KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.workersTableGSI}
+            KeySchema:
+              - AttributeName: RekognitionId
+                KeyType: HASH
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
       #  BillingMode: PAY_PER_REQUEST
 
     registersTable:

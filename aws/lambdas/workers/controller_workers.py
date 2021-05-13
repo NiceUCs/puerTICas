@@ -10,8 +10,10 @@ from tools.http_error import HTTPError
 # Environment variables
 aws_region = os.environ.get('AWS_REGION')
 workers_table = os.environ['WORKERS_TABLE']
+workers_table_gsi = os.environ['WORKERS_TABLE_GSI']
 registers_table = os.environ['REGISTERS_TABLE']
 workers_images_bucket = os.environ['WORKERS_IMAGES_BUCKET']
+workers_rekognition_collection = os.environ['WORKERS_REKOGNITION_COLLECTION']
 env = os.environ['ENDPOINT']
 
 # dnamodb resource
@@ -39,11 +41,7 @@ def identify(data):
     try:
         allowed = False
         response = {}
-        # obtener objetos de s3
-        imagesInBucket = s3.list_objects_v2(
-            Bucket=workers_images_bucket
-        )
-        keys = [obj['Key'] for obj in imagesInBucket['Contents']]
+
         # cargar string de imagen
         imageSource = data["image"]
         # cargar en base64 y convertir a bytes
@@ -51,42 +49,34 @@ def identify(data):
         # obtener los bytes
         imageSource = imageSource.getvalue()
 
-        for key in keys:
-            obj = s3.get_object(Bucket=workers_images_bucket, Key=key)
-            # leer imagen de base64
-            imageTarget = base64.b64encode(obj['Body'].read())
-            # pasar base64 a bytes
-            imageTarget = base64.b64decode(imageTarget)
-            # obtener los bytes
-            imageTarget = io.BytesIO(imageTarget)
-            imageTarget = imageTarget.getvalue()
-            # obtener email de la clave del objeto
-            emailTarget = key
-            # comparar imagenes
-            faces_comparison = rekognition.compare_faces(
-                SimilarityThreshold=90,
-                SourceImage={'Bytes': imageSource},
-                TargetImage={'Bytes': imageTarget}
+        response = rekognition.search_faces_by_image(
+            CollectionId=workers_rekognition_collection,
+            Image={'Bytes': imageSource}
+        )
+
+        for match in response['FaceMatches']:
+            print(match['Face']['FaceId'], match['Face']['Confidence'])
+          #  result = dynamodb_workers_table.get_item(
+            #    Key={'RekognitionId': {'S': match['Face']['FaceId']}}
+            # )
+            result = dynamodb_workers_table.query(
+                IndexName=workers_table_gsi,
+                KeyConditionExpression=Key('RekognitionId').eq(
+                    match['Face']['FaceId']),
             )
-            # si coinciden permitir acceso
-            if "FaceMatches" in faces_comparison \
-                and len(faces_comparison["FaceMatches"]) > 0 \
-                    and faces_comparison["FaceMatches"][0]["Similarity"] > 90:
+            print(result)
+            if 'Items' in result and len(result['Items']) > 0:
                 allowed = True
                 break
-        # obtener usuario por email
-        result = dynamodb_workers_table.get_item(
-            Key={
-                'email': emailTarget
-            }
-        )
-        if allowed and 'Item' in result:
+
+        if allowed:
+            user = result['Items'][0]
             response['Authorized'] = True
-            response['User'] = result['Item']
+            response['User'] = user
             # guardar registro de acceso en tabla registers
             item = {
-                "email": emailTarget,
-                "data": result['Item']["data"],
+                "email": user["email"],
+                "data": user["data"],
                 "dateCreation": str(datetime.utcnow().isoformat()),
             }
             dynamodb_registers_table.put_item(Item=item)

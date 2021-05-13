@@ -6,7 +6,7 @@ import uuid
 from tools.decimalencoder import DecimalEncoder
 import boto3
 
-from lambdas.workers.workers_controller import (
+from lambdas.workers.controller_workers import (
     identify,
 )
 

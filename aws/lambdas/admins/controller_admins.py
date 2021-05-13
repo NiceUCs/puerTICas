@@ -5,12 +5,14 @@ import base64
 from datetime import datetime, timedelta
 from boto3.dynamodb.conditions import Key
 from tools.http_error import HTTPError
+import io
 
 # environment variables
 aws_region = os.environ.get('AWS_REGION')
 workers_table = os.environ['WORKERS_TABLE']
 registers_table = os.environ['REGISTERS_TABLE']
 workers_images_bucket = os.environ['WORKERS_IMAGES_BUCKET']
+workers_rekognition_collection = os.environ['WORKERS_REKOGNITION_COLLECTION']
 env = os.environ['ENDPOINT']
 
 # dnamodb resource
@@ -52,10 +54,23 @@ def create_user(data):
         }
 
         # cargar string a bytes de base64
-        imageSource = base64.b64decode(data["data"]["image"])
+        image_source = base64.b64decode(data["data"]["image"])
+
+        image_source_bytes = io.BytesIO(image_source)
+        # obtener los bytes
+        image_source_bytes = image_source_bytes.getvalue()
+
+        # indexar face en coleccion
+        response = rekognition.index_faces(
+            Image={"Bytes": image_source},
+            CollectionId=workers_rekognition_collection)
+
+        # guardar id face en item de dynamodb
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            item["RekognitionId"] = response['FaceRecords'][0]['Face']['FaceId']
 
         # guardar imagen con key email del usuario
-        s3.put_object(Body=imageSource, Bucket=workers_images_bucket,
+        s3.put_object(Body=image_source, Bucket=workers_images_bucket,
                       Key=data["email"])
 
         # quitar imagen del item de dynamodb
@@ -74,15 +89,26 @@ def create_user(data):
 
 def delete_user(data):
     try:
-        # borrar usuario por email
-        dynamodb_workers_table.delete_item(
-            Key={"email": data["email"]}
-        )
+        user = dynamodb_workers_table.get_item(Key={'email': data["email"]})
 
-        # borrar objeto con la imagen por email
-        s3.delete_object(Bucket=workers_images_bucket, Key=data["email"])
+        if "Item" not in user:
+            response = {"Delete": False, "data": data}
 
-        response = {"Delete": True, "data": data}
+        else:
+            user = user['Item']
+            # borrar usuario por email
+            dynamodb_workers_table.delete_item(
+                Key={"email": data["email"]}
+            )
+
+            # borrar objeto con la imagen por email
+            s3.delete_object(Bucket=workers_images_bucket,
+                             Key=user["email"])
+
+            rekognition.delete_faces(CollectionId=workers_rekognition_collection,
+                                     FaceIds=[user["RekognitionId"]])
+
+            response = {"Delete": True, "data": data}
 
         return response
 

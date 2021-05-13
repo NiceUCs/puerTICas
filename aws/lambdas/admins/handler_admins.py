@@ -6,7 +6,7 @@ import uuid
 from tools.decimalencoder import DecimalEncoder
 import boto3
 
-from lambdas.admins.admins_controller import (
+from lambdas.admins.controller_admins import (
     get_users,
     create_user,
     delete_user,
