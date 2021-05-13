@@ -55,8 +55,7 @@ export class CreateUserComponent implements OnInit {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      console.log(reader.result.toString().split(',')[1]),
-        (me.createUserForm.value.image = reader.result.toString().split(',')[1]);
+      me.createUserForm.value.image = reader.result.toString().split(',')[1];
     };
     reader.onerror = function (error) {
       console.log('Error: ', error);

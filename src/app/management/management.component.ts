@@ -68,7 +68,6 @@ export class ManagementComponent implements OnInit {
         born: user.data.born,
       },
     });
-    console.log(this.usersList);
   }
 
   //Modal to create user
