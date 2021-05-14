@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "a8ac66cc-4f10-4d90-8f19-c5225bfebe9e",
+		"name": "PyGiTIC_PuerTICas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "admins",
+			"item": [
+				{
+					"name": "{{aws_url}}/admins/get_users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{aws_url}}/admins/get_users",
+							"host": [
+								"{{aws_url}}"
+							],
+							"path": [
+								"admins",
+								"get_users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{aws_url}}/admins/get_analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{aws_url}}/admins/get_analytics",
+							"host": [
+								"{{aws_url}}"
+							],
+							"path": [
+								"admins",
+								"get_analytics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{aws_url}}/admins/delete_user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{aws_url}}/admins/delete_user/{{email}}",
+							"host": [
+								"{{aws_url}}"
+							],
+							"path": [
+								"admins",
+								"delete_user",
+								"{{email}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{aws_url}}/admins/create_user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"{{email}}\",\r\n    \"data\":{\r\n        \"name\":\"workerName\",\r\n        \"surname\":\"workerSurname\",\r\n        \"image\":\"{{workers_image_base64}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{aws_url}}/admins/create_user",
+							"host": [
+								"{{aws_url}}"
+							],
+							"path": [
+								"admins",
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "workers",
+			"item": [
+				{
+					"name": "{{aws_url}}/workers/identify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"image\":\"{{workers_image_base64}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{aws_url}}/workers/identify",
+							"host": [
+								"{{aws_url}}"
+							],
+							"path": [
+								"workers",
+								"identify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

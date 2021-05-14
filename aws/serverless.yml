@@ -1,0 +1,264 @@
+service: puerticas
+
+frameworkVersion: "2"
+
+package:
+  exclude:
+    - ./**
+  include:
+    - lambdas/**
+    - tools/**
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ${self:custom.region}
+  environment:
+    WORKERS_TABLE: ${self:custom.workersTable}
+    WORKERS_TABLE_GSI: ${self:custom.workersTableGSI}
+    REGISTERS_TABLE: ${self:custom.registersTable}
+    WORKERS_IMAGES_BUCKET: ${self:custom.workersImagesBucket}
+    WORKERS_REKOGNITION_COLLECTION: ${self:custom.workersRekognitionCollection}
+    DOMAIN_SUFFIX: puerticas-com
+    ENDPOINT:
+      Fn::GetAtt:
+        - ApiGatewayRestApi
+        - RootResourceId
+  apiGateway:
+    shouldStartNameWithService: true
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - arn:aws:dynamodb:*:*:*
+        - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.workersTable}
+        - arn:aws:dynamodb:${self:custom.region}:*:table/${self:custom.registersTable}
+    - Effect: Allow
+      Action:
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::${self:custom.workersImagesBucket}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:DeleteObject
+      Resource:
+        - arn:aws:s3:::${self:custom.workersImagesBucket}/*
+    - Effect: Allow
+      Action:
+        - rekognition:*
+      Resource: "*"
+
+custom:
+  region: us-east-1
+  workersRekognitionCollection: ${self:custom.config.workersRekognitionCollection}
+  workersTable: ${self:service}-${self:custom.config.workersTableName}.${self:custom.region}.es
+  workersTableGSI: ${self:custom.config.workersTableGSI}
+  registersTable: ${self:service}-${self:custom.config.registersTableName}.${self:custom.region}.es
+
+  workersImagesBucket: ${self:service}-${self:custom.config.workersImagesBucketName}.${self:custom.region}.es
+
+  dynamodb:
+    # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      # inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+    seed:
+      domain:
+        sources:
+          - table: ${self:custom.workersTable}
+            sources: ${self:custom.config.workersSeeder}
+          - table: ${self:custom.registersTable}
+            sources: ${self:custom.config.registersSeeder}
+
+  #-------------VARIABLES------------------------------------
+  config: ${file(./config.yml)}
+
+functions:
+  #-------------ADMINS------------------------------------
+  get_users:
+    handler: lambdas/admins/handler_admins.h_get_users
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/get_users
+          method: get
+          cors: true
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
+
+  get_user_image:
+    handler: lambdas/admins/handler_admins.h_get_user_image
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/get_user_image/{email}
+          method: get
+          cors: true
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
+
+  get_analytics:
+    handler: lambdas/admins/handler_admins.h_get_analytics
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/get_analytics
+          method: get
+          cors: true
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
+
+  create_user:
+    handler: lambdas/admins/handler_admins.h_create_user
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/create_user
+          method: post
+          cors: true
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
+
+  delete_user:
+    handler: lambdas/admins/handler_admins.h_delete_user
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.admins}/delete_user/{email}
+          method: delete
+          cors: true
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
+
+  #-------------WORKERS------------------------------------
+  identify:
+    handler: lambdas/workers/handler_workers.h_identify
+    events:
+      - http:
+          path: ${self:custom.config.apiUrls.workers}/identify
+          method: post
+          cors: true
+
+#-------------------RESOURCES-----------------------
+resources:
+  Resources:
+    #--------------------COGNITO---------------
+    serviceUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:service}-user-pool
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            RequireLowercase: true
+            RequireSymbols: false
+            RequireNumbers: true
+            MinimumLength: 8
+            RequireUppercase: true
+        AdminCreateUserConfig:
+          InviteMessageTemplate:
+            EmailMessage: "Your puerTICas username is {username} and temporary password is {####}."
+            EmailSubject: "Your temporary puerTICas password"
+          UnusedAccountValidityDays: 7
+          AllowAdminCreateUserOnly: true
+    serviceUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:service}-user-pool-client
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        UserPoolId:
+          Ref: serviceUserPool
+        CallbackURLs:
+          - https://front-end.d1zthcazmxdoeg.amplifyapp.com/tabs/management
+          - https://localhost:4200
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+    serviceUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId:
+          Ref: serviceUserPool
+        Domain: ${self:service}-user-pool-domain--${self:provider.environment.DOMAIN_SUFFIX}
+    #-------------DYNAMODB------------------------------------
+    workersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.workersTable}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: RekognitionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        #  - AttributeName: RekognitionId
+        #    KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.workersTableGSI}
+            KeySchema:
+              - AttributeName: RekognitionId
+                KeyType: HASH
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
+      #  BillingMode: PAY_PER_REQUEST
+
+    registersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.registersTable}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+          - AttributeName: dateCreation
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+          - AttributeName: dateCreation
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      #  BillingMode: PAY_PER_REQUEST
+
+    #-------------S3------------------------------------
+    WorkersImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.workersImagesBucket}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline

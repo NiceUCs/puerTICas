@@ -1,0 +1,10 @@
+[
+    {
+        "email": "worker1@worker.com",
+        "dateCreation": "2021-04-06T23:25:12.231Z",
+        "data": {
+            "name": "worker1",
+            "surname": "worker1"
+        }
+    }
+]
