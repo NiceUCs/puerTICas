@@ -1,4 +1,4 @@
-service: puerticas-c
+service: puerticas
 
 frameworkVersion: "2"
 
@@ -181,6 +181,7 @@ resources:
         UserPoolId:
           Ref: serviceUserPool
         CallbackURLs:
+          - https://front-end.d1zthcazmxdoeg.amplifyapp.com/tabs/management
           - https://localhost:4200
         ExplicitAuthFlows:
           - ALLOW_USER_SRP_AUTH
