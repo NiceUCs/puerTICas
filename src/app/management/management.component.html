@@ -6,8 +6,8 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button>
-        <ion-icon slot="icon-only" ios="ellipsis-vertical" md="ellipsis-vertical"></ion-icon>
+      <ion-button (click)="signOut()">
+        <ion-icon slot="icon-only" ios="log-out-outline" md="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title class="ion-text-center"> User Management</ion-title>
@@ -22,7 +22,8 @@
 
     <ion-item *ngFor="let user of usersList">
       <ion-avatar slot="start">
-        <img src="data:image/png;base64,{{ user.data.image }}" />
+        <img *ngIf="!isLoading" src="data:image/png;base64,{{ user.data.image }}" />
+        <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
       </ion-avatar>
       <ion-label>
         <h2>

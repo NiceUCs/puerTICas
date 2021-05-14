@@ -3,7 +3,7 @@ import { finalize } from 'rxjs/operators';
 import { ModalController, ToastController } from '@ionic/angular';
 import { CreateUserComponent } from './createuser/createuser.component';
 import { EmailValidator } from '@angular/forms';
-
+import { Auth } from 'aws-amplify';
 import { User } from './user-interface';
 import { ManagementService } from './management.service';
 
@@ -28,12 +28,13 @@ export class ManagementComponent implements OnInit {
 
   //Create user list
   createUserList() {
+    this.isLoading = true;
     this.managementService.getUsers().subscribe((usersData) => {
       this.usersList = usersData;
       usersData.forEach((value: any, i: any) => {
         this.managementService.getUserImages(value.email).subscribe((response) => {
           this.usersList[i]['data']['image'] = response;
-          console.log(this.usersList);
+          this.isLoading = false;
         });
       });
     });
@@ -97,5 +98,12 @@ export class ManagementComponent implements OnInit {
       color: 'primary',
     });
     toast.present();
+  }
+  async signOut() {
+    try {
+      await Auth.signOut({ global: true });
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
   }
 }

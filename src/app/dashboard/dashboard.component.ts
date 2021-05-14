@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { environment } from '@env/environment';
-import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { DashboardService } from './dashboard.service';
-
+import { Auth } from 'aws-amplify';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -12,7 +12,11 @@ import { DashboardService } from './dashboard.service';
 export class DashboardComponent implements OnInit {
   version: string | null = environment.version;
   accessList: any[];
-  columns = [{ prop: 'dateCreation', name: 'Access' }, { name: 'Email' }, { prop: 'data', name: 'Full Name' }];
+  columns = [
+    { prop: 'dateCreation', name: 'Access' },
+    { prop: 'email', name: 'Email' },
+    { prop: 'data', name: 'Full Name' },
+  ];
   temp: any = [];
 
   @ViewChild(DatatableComponent) myFilterTable: DatatableComponent;
@@ -44,5 +48,12 @@ export class DashboardComponent implements OnInit {
     this.accessList = temp;
     // Whenever the filter changes, always go back to the first page
     this.myFilterTable.offset = 0;
+  }
+  async signOut() {
+    try {
+      await Auth.signOut({ global: true });
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
   }
 }

@@ -27,7 +27,7 @@
 
         <ion-item lines="inset">
           <ion-label color="medium" position="floating" translate>DNI</ion-label>
-          <ion-input formControlName="dni"></ion-input>
+          <ion-input pattern="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]" formControlName="dni"></ion-input>
         </ion-item>
 
         <ion-text color="danger" [hidden]="createUserForm.controls.dni.valid || createUserForm.controls.dni.untouched">
