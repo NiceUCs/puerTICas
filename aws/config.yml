@@ -17,3 +17,6 @@ apiUrls:
   admins: admins
   workers: workers
 
+#---------------COGNITO---------------
+cognitoARN: arn:aws:cognito-idp:us-east-1:617503621622:userpool/us-east-1_ET2XCCtKe
+
