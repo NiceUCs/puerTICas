@@ -1,0 +1,18 @@
+[
+  {
+    "email": "worker1@gmail.com",
+    "dateCreation": "2021-04-05T23:25:12.231Z",
+    "data": {
+      "name": "worker1",
+      "surname": "worker1"
+    }
+  },
+  {
+    "email": "worker2@gmail.com",
+    "dateCreation": "2021-06-05T23:25:12.231Z",
+    "data": {
+      "name": "worker2",
+      "surname": "worker2"
+    }
+  }
+]
