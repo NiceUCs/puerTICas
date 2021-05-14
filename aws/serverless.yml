@@ -98,7 +98,6 @@ functions:
           method: get
           cors: true
           authorizer:
-            name: authorizer
             arn: ${self:custom.config.cognitoARN}
 
   get_user_image:
@@ -109,7 +108,6 @@ functions:
           method: get
           cors: true
           authorizer:
-            name: authorizer
             arn: ${self:custom.config.cognitoARN}
 
   get_analytics:
@@ -118,9 +116,17 @@ functions:
       - http:
           path: ${self:custom.config.apiUrls.admins}/get_analytics
           method: get
-          cors: true
+          cors: 
+            origin: '*' # <-- Specify allowed origin
+            headers: # <-- Specify allowed headers
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+            allowCredentials: false
           authorizer:
-            name: authorizer
             arn: ${self:custom.config.cognitoARN}
 
   create_user:
@@ -131,7 +137,6 @@ functions:
           method: post
           cors: true
           authorizer:
-            name: authorizer
             arn: ${self:custom.config.cognitoARN}
 
   delete_user:
@@ -142,7 +147,6 @@ functions:
           method: delete
           cors: true
           authorizer:
-            name: authorizer
             arn: ${self:custom.config.cognitoARN}
 
   #-------------WORKERS------------------------------------
