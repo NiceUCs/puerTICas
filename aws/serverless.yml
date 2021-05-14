@@ -1,4 +1,4 @@
-service: puerticas-jose
+service: puerticas
 
 frameworkVersion: "2"
 
@@ -116,16 +116,7 @@ functions:
       - http:
           path: ${self:custom.config.apiUrls.admins}/get_analytics
           method: get
-          cors: 
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
           authorizer:
             arn: ${self:custom.config.cognitoARN}
 
