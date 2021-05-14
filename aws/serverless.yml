@@ -1,4 +1,4 @@
-service: puerticas
+service: puerticas-c
 
 frameworkVersion: "2"
 

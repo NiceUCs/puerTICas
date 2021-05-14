@@ -73,6 +73,10 @@ def create_user(data):
         s3.put_object(Body=image_source, Bucket=workers_images_bucket,
                       Key=data["email"])
 
+        #guardar URI a s3 del object de la imagen en dynamo
+        item["data"]["imageURI"] = "s3://" + workers_images_bucket + "/" + data["email"]
+		# url = "https://s3.amazonaws.com/" + workers_images_bucket + + "/" + data["email"]
+
         # quitar imagen del item de dynamodb
         del item['data']['image']
 
