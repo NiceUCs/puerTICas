@@ -24,9 +24,12 @@ import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
 
 /* Configure Amplify resources */
 Amplify.configure({
-  region: environment.region,
-  userPoolId: environment.userPoolId,
-  userPoolWebClientId: environment.userPoolWebClientId,
+  region: 'us-east-1',
+  userPoolId: 'us-east-1_ET2XCCtKe',
+  userPoolWebClientId: '3m3dildk65ovivev3kb88ulm2o',
+  //region: environment.region,
+  //userPoolId: environment.userPoolId,
+  //userPoolWebClientId: environment.userPoolWebClientId,
 });
 
 @NgModule({
