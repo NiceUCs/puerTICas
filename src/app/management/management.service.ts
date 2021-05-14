@@ -12,7 +12,7 @@ export class ManagementService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      //'x-access-token': JSON.parse(localStorage.getItem('api-jwt-token')),
+      authorization: sessionStorage.getItem('authorization'),
     }),
   };
   private url = '/admins';

@@ -16,9 +16,7 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   get token(): string | null {
-    const credentials = localStorage.getItem('api-jwt-token');
-    //storage.setItem('api-token', 'adas');
-
+    const credentials = sessionStorage.getItem('authorization');
     return credentials ? credentials : null;
   }
 

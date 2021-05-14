@@ -65,16 +65,19 @@ export class AppComponent implements OnInit, OnDestroy {
           this.titleService.setTitle(this.translateService.instant(title));
         }
       });
+    this.setToken();
   }
 
-  private getJwtToken(): Promise<string | void> {
-    return Auth.currentSession().then((session) => {
-      localStorage.setItem('api-jwt-token', session.getIdToken().getJwtToken());
+  private getJwtToken(): Promise<any> {
+    return Auth.currentSession()
+      .then((session) => session.getIdToken().getJwtToken())
+      .catch((err) => console.log(err));
+  }
+
+  public setToken() {
+    this.getJwtToken().then((token) => {
+      sessionStorage.setItem('authorization', token);
     });
-  }
-
-  public testAPICall(): void {
-    this.getJwtToken().then(console.log);
   }
 
   get isWeb(): boolean {

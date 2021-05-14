@@ -22,14 +22,14 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import Amplify from 'aws-amplify';
 import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
 
-/* Configure Amplify resources */
+// Configure Amplify resources
 Amplify.configure({
   region: 'us-east-1',
   userPoolId: 'us-east-1_ET2XCCtKe',
   userPoolWebClientId: '3m3dildk65ovivev3kb88ulm2o',
-  //region: environment.region,
+  /*region: environment.region,
   //userPoolId: environment.userPoolId,
-  //userPoolWebClientId: environment.userPoolWebClientId,
+  //userPoolWebClientId: environment.userPoolWebClientId,*/
 });
 
 @NgModule({
