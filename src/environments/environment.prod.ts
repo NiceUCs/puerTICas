@@ -11,8 +11,8 @@ export const environment = {
   version: env.npm_package_version,
   serverUrl: 'https://vnp82wz25f.execute-api.us-east-1.amazonaws.com/dev',
   region: 'us-east-1',
-  userPoolId: 'us-east-1_5K56qXFRR',
-  userPoolWebClientId: '3g2sa412bs3plm03pr1c4fieps',
+  userPoolId: 'us-east-1_ET2XCCtKe',
+  userPoolWebClientId: '3m3dildk65ovivev3kb88ulm2o',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US', 'es-ES'],
 };
