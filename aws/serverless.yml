@@ -1,4 +1,4 @@
-service: puerticas
+service: puerticas-jose
 
 frameworkVersion: "2"
 
@@ -24,6 +24,19 @@ provider:
       Fn::GetAtt:
         - ApiGatewayRestApi
         - RootResourceId
+  http:
+    authorizers:
+      serviceAuthorizer:
+        identitySource: $request.header.Authorization
+        issuerUrl: 
+          Fn::Join:
+          - ''
+          - - 'https://cognito-idp.'
+            - '${self:provider.region}'
+            - '.amazonaws.com/'
+            - Ref: serviceUserPool
+        audience:
+          - Ref: serviceUserPoolClient
   apiGateway:
     shouldStartNameWithService: true
 
