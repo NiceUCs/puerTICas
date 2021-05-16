@@ -7,7 +7,7 @@ Requisitos ejecutar en Raspberry Pi 3 Model B:
     - Periférico Raspberry Pi Sense HAT conectado en puerto GPIO
 - Librerías
     - picamera 
-    - sense_hat (```sudo apt install sense-hat``` en <a href="https://www.raspberrypi.org/software/operating-systems/">Raspbian</a> y bus I2C habilitado)
+    - sense_hat
 
 Para ejecutar el script, primero se debe rellenar el fichero config.py, que se debe encontrar en el mismo directorio que los ficheros main.py y ledIcons.py. Una vez rellenado, ejecutar el fichero main con:
 
