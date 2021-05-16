@@ -14,6 +14,8 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <app-plot [accessList]="accessList"></app-plot>
+
   <div class="ion-padding">
     <ion-item class="box">
       <ion-input
@@ -28,16 +30,17 @@
     <!-- Theme classes dark, material, bootstrap -->
     <ngx-datatable
       class="material"
-      [limit]="8"
+      [limit]="10"
       [rows]="accessList"
       [rowHeight]="50"
+      [resizeable]="true"
       [columns]="columns"
       [columnMode]="'force'"
       [sortType]="'multi'"
+      [sorts]="[{ prop: 'dateCreation', dir: 'desc' }]"
       [headerHeight]="50"
       [footerHeight]="50"
     >
     </ngx-datatable>
   </div>
-  <!--app-plot [accessList]="accessList"></!--app-plot-->
 </ion-content>

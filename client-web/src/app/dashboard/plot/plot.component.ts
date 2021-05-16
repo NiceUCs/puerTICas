@@ -4,6 +4,8 @@ import * as stockharts from 'highcharts/highstock';
 import exporting from 'highcharts/modules/exporting';
 import { DashboardService } from '../dashboard.service';
 import { dateFormat } from 'highcharts';
+import * as moment from 'moment';
+import * as _ from 'lodash';
 
 exporting(highCharts);
 
@@ -13,18 +15,18 @@ exporting(highCharts);
   styleUrls: ['./plot.component.scss'],
 })
 export class PlotComponent implements OnInit {
-  max_date = new Date();
-  min_date = new Date().setDate(new Date().getDate() - 1);
+  max_date = new Date().getTime();
+  min_date = new Date().getTime() - 7 * 24 * 60 * 60000;
   plotData: any;
   data: any = [];
+  data_transformed: any = [];
   chart1: any;
-  filterSelected: any = '1d';
+  total_access: any;
+  access_today: any;
   @Input() accessList: any;
   constructor(public dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    this.refreshPlot();
-
     setTimeout(() => {
       this.saveAccessList();
     }, 1000);
@@ -33,122 +35,171 @@ export class PlotComponent implements OnInit {
   saveAccessList() {
     this.plotData = this.accessList;
     for (let i = 0; i < this.plotData.length; i++) {
-      this.plotData[i].dateCreation = new Date(this.plotData[i].dateCreation).getUTCDate();
-      this.data.push([this.plotData[i].dateCreation, 1]);
+      this.plotData[i].dateCreation = new Date(this.plotData[i].dateCreation);
+      this.data.push(this.plotData[i].dateCreation);
     }
+    this.total_access = this.plotData.length;
+
+    let grouped_data = this.groupday(this.data);
+    for (let i = 0; i < grouped_data.length; i++) {
+      console.log(new Date(grouped_data[i].day).getTime() + 7200);
+      this.data_transformed.push([
+        new Date(grouped_data[i].day).getTime() + 24 * 60 * 60000,
+        grouped_data[i].times.length,
+      ]);
+    }
+    this.access_today = this.data_transformed[this.data_transformed.length - 1][1];
+
+    console.log(this.data_transformed);
+    this.linePlot(this.data_transformed, this.min_date);
   }
 
-  filter_dates() {
-    this.accessList = this.accessList.filter((a: any) => a > this.min_date && a < this.max_date);
-    this.refreshPlot();
+  groupday(ocurrence: any) {
+    var occurrenceDay = function (occurrence: any) {
+      return moment(occurrence).startOf('day').format();
+    };
+
+    var groupToDay = function (group: any, day: any) {
+      return {
+        day: day,
+        times: group,
+      };
+    };
+
+    var result = _.chain(ocurrence).groupBy(occurrenceDay).map(groupToDay).sortBy('day').value();
+
+    return result;
   }
 
-  linePlot() {
-    /*
-  this.chart1 = highCharts.chart('container', {
-    title: {
-        text: ''
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
+  linePlot(data: any, min: any) {
+    this.chart1 = highCharts.chart('container', {
+      title: {
+        text: '',
+      },
+      xAxis: {
         type: 'datetime',
-        dateTimeLabelFormats: {
-            month: '%e. %b',
-            year: '%b'
-        },
+        tickInterval: 24 * 3600 * 1000,
+        min: min,
+      },
+      yAxis: {
         title: {
-            text: 'Date'
-        }
-
-    },
-    yAxis: {
-        title: {
-            text: 'Wokers'
+          text: 'Nº Access',
         },
-        min: 0
-    },
-    tooltip: {
-        headerFormat: '<b>{series.name}</b><br>',
-        pointFormat: '{point.x:%e. %b}: {point.y:.2f} access'
-    },
-
-    colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-
-    series: [{
-        name: "Access",
-        //CAMBIAR POR THIS.DATA PERO NO VA ESTO
-        data: [
-            [Date.UTC(2021, 4, 5,8, 0, 0), 3],
-            [Date.UTC(2021, 4, 10,8, 0, 0), 1],
-            [Date.UTC(2021, 4, 11,9, 0, 0), 1],
-            [Date.UTC(2021, 4, 12,10, 0, 0), 1],
-            [Date.UTC(2021, 4, 13,12, 0, 0), 1],
-            [Date.UTC(2021, 4, 13,13, 0, 0), 1],
-            [Date.UTC(2021, 4, 13,14, 0, 0), 1],
-            [Date.UTC(2021, 4, 13,14, 0, 0), 1],
-        ]
-    }],
-    credits: {
-      enabled: false,
-    },
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
+      },
+      legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle',
+      },
+      plotOptions: {
+        series: {
+          color: 'green',
+        },
+        line: {
+          dataLabels: {
+            enabled: false,
+          },
+          enableMouseTracking: true,
+        },
+      },
+      exporting: {
+        chartOptions: {
+          plotOptions: {
+            series: {
+              dataLabels: {
+                enabled: true,
+              },
             },
+          },
+        },
+        scale: 3,
+        fallbackToExportServer: false,
+      },
+      series: [
+        {
+          name: 'Access',
+          type: 'line',
+          data: data,
+          marker: {
+            lineWidth: 2,
+            lineColor: highCharts.getOptions().colors[7],
+            fillColor: 'white',
+            enabled: false,
+          },
+        },
+      ],
+      credits: {
+        enabled: false,
+      },
 
-        }]
-    }
-});
+      responsive: {
+        rules: [
+          {
+            condition: {
+              maxWidth: 500,
+            },
+            chartOptions: {
+              legend: {
+                align: 'center',
+                verticalAlign: 'bottom',
+                layout: 'horizontal',
+              },
+              yAxis: {
+                labels: {
+                  align: 'left',
+                  x: 0,
+                  y: -5,
+                },
+                title: {
+                  text: null,
+                },
+              },
+
+              subtitle: {
+                text: null,
+              },
+              credits: {
+                enabled: false,
+              },
+            },
+          },
+        ],
+      },
+    });
   }
 
   filter(value: any) {
-    this.filterSelected = value;
+    console.log(value);
     switch (value) {
-      case '1h':
-        this.min_date = new Date().setDate(new Date().getHours() - 1);
-        this.filter_dates();
+      case '3d':
+        this.min_date = new Date().getTime() - 3 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
         break;
-
-      case '3h':
-        this.min_date = new Date().setDate(new Date().getHours() - 3);
-        this.filter_dates();
-        break;
-
-      case '12h':
-        this.min_date = new Date().setDate(new Date().getHours() - 12);
-        this.filter_dates();
-        break;
-
-      case '1d':
-        this.min_date = new Date().setDate(new Date().getDate() - 1);
-        this.filter_dates();
-        break;
-
       case '1w':
-        this.min_date = new Date().setDate(new Date().getDate() - 3);
-        this.filter_dates();
+        this.min_date = new Date().getTime() - 7 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
         break;
-
+      case '2w':
+        this.min_date = new Date().getTime() - 14 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
+        break;
+      case '3w':
+        this.min_date = new Date().getTime() - 21 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
+        break;
       case '1m':
-        this.min_date = new Date().setDate(new Date().getDate() - 31);
-        this.filter_dates();
+        this.min_date = new Date().getTime() - 31 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
         break;
-
+      case '3m':
+        this.min_date = new Date().getTime() - 3 * 31 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
+        break;
+      case '1y':
+        this.min_date = new Date().getTime() - 12 * 31 * 24 * 60 * 60000;
+        this.linePlot(this.data_transformed, this.min_date);
+        break;
       default:
-    }*/
-  }
-
-  refreshPlot() {
-    setTimeout(() => {
-      this.linePlot();
-    }, 500);
-  }
-
-  ionViewDidEnter() {
-    this.linePlot();
+    }
   }
 }
