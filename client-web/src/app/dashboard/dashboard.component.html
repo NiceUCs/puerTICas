@@ -22,8 +22,8 @@
         type="text"
         clearInput="true"
         inputmode="search"
-        placeholder="Search by access"
-        (keyup)="updateFilter($event)"
+        placeholder="Search by name"
+        (keyup)="updateFilter($event.target.value)"
       ></ion-input>
     </ion-item>
 
@@ -37,7 +37,6 @@
       [columns]="columns"
       [columnMode]="'force'"
       [sortType]="'multi'"
-      [sorts]="[{ prop: 'dateCreation', dir: 'desc' }]"
       [headerHeight]="50"
       [footerHeight]="50"
     >

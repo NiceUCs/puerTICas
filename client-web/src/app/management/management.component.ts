@@ -21,6 +21,7 @@ export class ManagementComponent implements OnInit {
     public toastController: ToastController,
     private managementService: ManagementService
   ) {
+    this.isLoading = true;
     this.createUserList();
   }
 

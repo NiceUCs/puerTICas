@@ -44,7 +44,7 @@ export class PlotComponent implements OnInit {
     for (let i = 0; i < grouped_data.length; i++) {
       console.log(new Date(grouped_data[i].day).getTime() + 7200);
       this.data_transformed.push([
-        new Date(grouped_data[i].day).getTime() + 24 * 60 * 60000,
+        new Date(grouped_data[i].day).getTime() + 2 * 60 * 60000,
         grouped_data[i].times.length,
       ]);
     }

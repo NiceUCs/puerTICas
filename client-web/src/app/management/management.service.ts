@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { User } from './user-interface';
+import { AppComponent } from '@app/app.component';
 
 @Injectable({
   providedIn: 'root',
@@ -29,9 +30,9 @@ export class ManagementService {
       email: user.email,
       data: user.data,
     });
+
     return this.http.post<any>(this.url + '/create_user', body, this.httpOptions);
   }
-
   /**
    * GET all users information from table ACCESS
    * @param -

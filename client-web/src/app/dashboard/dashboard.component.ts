@@ -4,6 +4,9 @@ import { environment } from '@env/environment';
 import { DashboardService } from './dashboard.service';
 import { Auth } from 'aws-amplify';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { Access } from './access-interface';
+import { Pipe, PipeTransform } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -21,28 +24,31 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(DatatableComponent) myFilterTable: DatatableComponent;
 
-  constructor(public dashboardService: DashboardService) {}
-
-  ngOnInit() {
+  constructor(public dashboardService: DashboardService) {
     this.createAccessList();
   }
 
+  ngOnInit() {}
+
   createAccessList() {
     this.dashboardService.getAccess().subscribe((accessData) => {
+      console.log(accessData);
       this.accessList = accessData;
-      for (let i = 0; i < this.accessList.length; i++) {
+
+      for (let i = 0; i < accessData.length; i++) {
         this.accessList[i].data = this.accessList[i].data.name + ' ' + this.accessList[i].data.surname;
-        this.accessList[i].dateCreation = this.accessList[i].dateCreation;
+        //this.accessList[i].dateCreation = this.accessList[i].dateCreation;
       }
+      console.log(this.accessList);
       this.temp = [...this.accessList];
     });
   }
 
   updateFilter(event: any) {
-    const val = event.target.value.toLowerCase();
+    const val = event.toLowerCase();
     // filter our data
     const temp = this.temp.filter(function (d: any) {
-      return d.dateCreation.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.data.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // update the rows
     this.accessList = temp;
