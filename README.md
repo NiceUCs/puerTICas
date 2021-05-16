@@ -12,3 +12,5 @@
     -   ```/tools```: código auxiliar
     -   ```serverless.yml```: fichero YML que define la arquitectura a desplegar en AWS
     -   ```serverless.md```: guía para ejecutar en local la arquitectura serverless
+- ```/client-web```: contiene la documentación y código para el cliente web
+- ```/raspi3```: contiene el código e instrucciones para el cliente de la Raspberry Pi 3
