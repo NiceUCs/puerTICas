@@ -100,16 +100,6 @@ functions:
           authorizer:
             arn: ${self:custom.config.cognitoARN}
 
-  get_user_image:
-    handler: lambdas/admins/handler_admins.h_get_user_image
-    events:
-      - http:
-          path: ${self:custom.config.apiUrls.admins}/get_user_image/{email}
-          method: get
-          cors: true
-          authorizer:
-            arn: ${self:custom.config.cognitoARN}
-
   get_analytics:
     handler: lambdas/admins/handler_admins.h_get_analytics
     events:

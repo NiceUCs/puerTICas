@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
   }
   async signOut() {
     try {
+      sessionStorage.removeItem('authorization');
       await Auth.signOut({ global: true });
     } catch (error) {
       console.log('error signing out: ', error);

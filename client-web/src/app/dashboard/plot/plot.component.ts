@@ -44,7 +44,7 @@ export class PlotComponent implements OnInit {
   }
 
   linePlot() {
-  /*
+    /*
   this.chart1 = highCharts.chart('container', {
     title: {
         text: ''

@@ -31,12 +31,7 @@ export class ManagementComponent implements OnInit {
     this.isLoading = true;
     this.managementService.getUsers().subscribe((usersData) => {
       this.usersList = usersData;
-      usersData.forEach((value: any, i: any) => {
-        this.managementService.getUserImages(value.email).subscribe((response) => {
-          this.usersList[i]['data']['image'] = response;
-          this.isLoading = false;
-        });
-      });
+      this.isLoading = false;
     });
   }
 
@@ -101,6 +96,7 @@ export class ManagementComponent implements OnInit {
   }
   async signOut() {
     try {
+      sessionStorage.removeItem('authorization');
       await Auth.signOut({ global: true });
     } catch (error) {
       console.log('error signing out: ', error);
