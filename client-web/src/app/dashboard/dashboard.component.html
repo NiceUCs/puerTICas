@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <app-plot [accessList]="accessList"></app-plot>
+  <app-plot *ngIf="!loading" [accessList]="accessList"></app-plot>
 
   <div class="ion-padding">
     <ion-item class="box">

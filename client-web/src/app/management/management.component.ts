@@ -20,12 +20,12 @@ export class ManagementComponent implements OnInit {
     public modalController: ModalController,
     public toastController: ToastController,
     private managementService: ManagementService
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.isLoading = true;
     this.createUserList();
   }
-
-  ngOnInit() {}
 
   //Create user list
   createUserList() {

@@ -15,6 +15,7 @@ import { CurrencyPipe } from '@angular/common';
 export class DashboardComponent implements OnInit {
   version: string | null = environment.version;
   accessList: any[];
+  loading = false;
   columns = [
     { prop: 'dateCreation', name: 'Access' },
     { prop: 'email', name: 'Email' },
@@ -24,15 +25,14 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild(DatatableComponent) myFilterTable: DatatableComponent;
 
-  constructor(public dashboardService: DashboardService) {
+  constructor(public dashboardService: DashboardService) {}
+
+  ngOnInit() {
     this.createAccessList();
   }
 
-  ngOnInit() {}
-
   createAccessList() {
-    this.dashboardService.getAccess().subscribe((accessData) => {
-      console.log(accessData);
+    this.dashboardService.getAccess().subscribe((accessData: any) => {
       this.accessList = accessData;
 
       for (let i = 0; i < accessData.length; i++) {

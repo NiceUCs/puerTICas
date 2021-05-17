@@ -33,25 +33,28 @@ export class PlotComponent implements OnInit {
   }
 
   saveAccessList() {
-    this.plotData = this.accessList;
-    for (let i = 0; i < this.plotData.length; i++) {
-      this.plotData[i].dateCreation = new Date(this.plotData[i].dateCreation);
-      this.data.push(this.plotData[i].dateCreation);
-    }
-    this.total_access = this.plotData.length;
+    this.dashboardService.getAccess().subscribe((accessData: any) => {
+      this.plotData = accessData;
 
-    let grouped_data = this.groupday(this.data);
-    for (let i = 0; i < grouped_data.length; i++) {
-      console.log(new Date(grouped_data[i].day).getTime() + 7200);
-      this.data_transformed.push([
-        new Date(grouped_data[i].day).getTime() + 2 * 60 * 60000,
-        grouped_data[i].times.length,
-      ]);
-    }
-    this.access_today = this.data_transformed[this.data_transformed.length - 1][1];
+      for (let i = 0; i < this.plotData.length; i++) {
+        this.plotData[i].dateCreation = new Date(this.plotData[i].dateCreation);
+        this.data.push(this.plotData[i].dateCreation);
+      }
+      this.total_access = this.plotData.length;
 
-    console.log(this.data_transformed);
-    this.linePlot(this.data_transformed, this.min_date);
+      let grouped_data = this.groupday(this.data);
+      for (let i = 0; i < grouped_data.length; i++) {
+        console.log(new Date(grouped_data[i].day).getTime() + 7200);
+        this.data_transformed.push([
+          new Date(grouped_data[i].day).getTime() + 2 * 60 * 60000,
+          grouped_data[i].times.length,
+        ]);
+      }
+      this.access_today = this.data_transformed[this.data_transformed.length - 1][1];
+
+      console.log(this.data_transformed);
+      this.linePlot(this.data_transformed, this.min_date);
+    });
   }
 
   groupday(ocurrence: any) {
