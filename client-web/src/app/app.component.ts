@@ -64,6 +64,8 @@ export class AppComponent implements OnInit, OnDestroy {
           this.titleService.setTitle(this.translateService.instant(title));
         }
       });
+    const listener = (data: any) => this.setToken();
+    Hub.listen('auth', listener);
   }
 
   private getJwtToken(): Promise<any> {
