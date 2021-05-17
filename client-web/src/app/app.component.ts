@@ -27,16 +27,18 @@ export class AppComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private i18nService: I18nService,
     private platform: Platform
-  ) {
-    const listener = (data: any) => this.setToken();
-    Hub.listen('auth', listener);
-  }
+  ) {}
 
   ngOnInit() {
     // Setup logger
+
     if (environment.production) {
+      const listener = (data: any) => this.setToken();
+      Hub.listen('auth', listener);
       Logger.enableProductionMode();
     }
+    const listener = (data: any) => this.setToken();
+    Hub.listen('auth', listener);
 
     log.debug('init');
 
@@ -64,8 +66,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.titleService.setTitle(this.translateService.instant(title));
         }
       });
-    const listener = (data: any) => this.setToken();
-    Hub.listen('auth', listener);
   }
 
   private getJwtToken(): Promise<any> {

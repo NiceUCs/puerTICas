@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Access } from './access-interface';
 import { USE_STORE } from '@ngx-translate/core';
-
+import { Cache } from 'aws-amplify';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +16,7 @@ export class DashboardService {
       authorization: sessionStorage.getItem('authorization'),
     }),
   };
+
   private url = '/admins';
 
   constructor(private http: HttpClient) {}
