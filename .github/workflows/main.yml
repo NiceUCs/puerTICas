@@ -1,13 +1,11 @@
 name: puerticas-jose
 on:
   push:
-    branches:
-      - main
     paths:
-    - 'aws/**'
+    - './aws/**'
 defaults:
   run:
-    working-directory: aws
+    working-directory: ./aws
 jobs:
   deploy:
     runs-on: ubuntu-latest
