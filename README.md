@@ -1,4 +1,4 @@
-![alt text](https://github.com/NiceUCs/puerTICas/blob/main/cliente-web/src/assets/puerticas-logo-black.png?raw=true)
+![PuerTICas](https://lh3.googleusercontent.com/pw/ACtC-3drcCUYAtW-0hwanqZPzHMmPhDPlXvmjQ95P4zE7Tj9BYhqMfvRpOnXPMsNxLTVkmA7sitK9dUWXvRWnApaKFDNvEs8RD-UGaoGhdkfbJnmNy_LH7bFxgmuqxXL9fxnZc6_i_xP2iEnN4EzWHkd_E9m=w379-h210-no?authuser=0)
 <img src="https://img.shields.io/static/v1?label=team&message=puerTICas&color=blueviolet"> 
 <img src="https://img.shields.io/static/v1?label=subject&message=PyGiTIC&color=orange"> 
 <img src="https://img.shields.io/static/v1?label=python&message=3.8&color=blue">
