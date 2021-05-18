@@ -1,4 +1,4 @@
-service: puerticas-c
+service: puerticas-jose
 
 frameworkVersion: "2"
 
@@ -97,18 +97,8 @@ functions:
           path: ${self:custom.config.apiUrls.admins}/get_users
           method: get
           cors: true
-          # authorizer:
-          #   arn: ${self:custom.config.cognitoARN}
-
-  get_user_image:
-    handler: lambdas/admins/handler_admins.h_get_user_image
-    events:
-      - http:
-          path: ${self:custom.config.apiUrls.admins}/get_user_image/{email}
-          method: get
-          cors: true
-          # authorizer:
-          #   arn: ${self:custom.config.cognitoARN}
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
 
   get_analytics:
     handler: lambdas/admins/handler_admins.h_get_analytics
@@ -117,8 +107,8 @@ functions:
           path: ${self:custom.config.apiUrls.admins}/get_analytics
           method: get
           cors: true
-          # authorizer:
-          #   arn: ${self:custom.config.cognitoARN}
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
 
   create_user:
     handler: lambdas/admins/handler_admins.h_create_user
@@ -127,8 +117,8 @@ functions:
           path: ${self:custom.config.apiUrls.admins}/create_user
           method: post
           cors: true
-          # authorizer:
-          #   arn: ${self:custom.config.cognitoARN}
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
 
   delete_user:
     handler: lambdas/admins/handler_admins.h_delete_user
@@ -137,8 +127,8 @@ functions:
           path: ${self:custom.config.apiUrls.admins}/delete_user/{email}
           method: delete
           cors: true
-          # authorizer:
-          #   arn: ${self:custom.config.cognitoARN}
+          authorizer:
+            arn: ${self:custom.config.cognitoARN}
 
   #-------------WORKERS------------------------------------
   identify:
