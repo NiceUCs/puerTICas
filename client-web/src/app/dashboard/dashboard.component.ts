@@ -7,6 +7,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Access } from './access-interface';
 import { Pipe, PipeTransform } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { PlotComponent } from './plot/plot.component';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -15,7 +16,7 @@ import { CurrencyPipe } from '@angular/common';
 export class DashboardComponent implements OnInit {
   version: string | null = environment.version;
   accessList: any[];
-  loading = false;
+  isLoading = false;
   columns = [
     { prop: 'dateCreation', name: 'Access' },
     { prop: 'email', name: 'Email' },
@@ -45,8 +46,12 @@ export class DashboardComponent implements OnInit {
   }
   //Refresh the users
   refreshUserList(event: any) {
+    this.isLoading = true;
+
     setTimeout(() => {
-      this.createAccessList();
+      this.ngOnInit();
+      this.isLoading = false;
+
       event.target.complete();
     }, 2000);
   }

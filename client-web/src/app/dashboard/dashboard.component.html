@@ -17,7 +17,8 @@
   <ion-refresher slot="fixed" (ionRefresh)="refreshUserList($event)">
     <ion-refresher-content> </ion-refresher-content>
   </ion-refresher>
-  <app-plot *ngIf="!loading" [accessList]="accessList"></app-plot>
+
+  <app-plot *ngIf="!isLoading"></app-plot>
 
   <div class="ion-padding">
     <ion-item class="box">

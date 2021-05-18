@@ -15,7 +15,6 @@ exporting(highCharts);
   styleUrls: ['./plot.component.scss'],
 })
 export class PlotComponent implements OnInit {
-  max_date = new Date().getTime();
   min_date = new Date().getTime() - 7 * 24 * 60 * 60000;
   plotData: any;
   data: any = [];
@@ -23,7 +22,6 @@ export class PlotComponent implements OnInit {
   chart1: any;
   total_access: any;
   access_today: any;
-  @Input() accessList: any;
   constructor(public dashboardService: DashboardService) {}
 
   ngOnInit(): void {
@@ -31,7 +29,6 @@ export class PlotComponent implements OnInit {
       this.saveAccessList();
     }, 1000);
   }
-
   saveAccessList() {
     this.dashboardService.getAccess().subscribe((accessData: any) => {
       this.plotData = accessData;
@@ -46,13 +43,11 @@ export class PlotComponent implements OnInit {
       for (let i = 0; i < grouped_data.length; i++) {
         console.log(new Date(grouped_data[i].day).getTime() + 7200);
         this.data_transformed.push([
-          new Date(grouped_data[i].day).getTime(), //+ 2 * 60 * 60000,
+          new Date(grouped_data[i].day).getTime() + 2 * 60 * 60000,
           grouped_data[i].times.length,
         ]);
       }
       this.access_today = this.data_transformed[this.data_transformed.length - 1][1];
-
-      console.log(this.data_transformed);
       this.linePlot(this.data_transformed, this.min_date);
     });
   }
