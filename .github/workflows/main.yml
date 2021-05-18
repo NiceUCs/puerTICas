@@ -1,4 +1,4 @@
-name: puerticas-jose
+name: puerticas
 on:
   push:
     branches:
