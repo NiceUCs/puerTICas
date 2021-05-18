@@ -1,3 +1,5 @@
+# Serverless
+
 Instalar serverless global:
 
 ```npm install -g serverless```
@@ -33,3 +35,18 @@ o
 ```sls deploy --aws-profile educate```
 
 Recuerda haber configurado los credenciales de AWS antes del despliegue
+
+# Rekognition
+
+### Para inicializar la colección de Rekognition hay que ejecutar:
+```
+import boto3
+rekognition = boto3.client('rekognition', region_name="us-east-1")
+response=rekognition.create_collection(CollectionId="workers")
+print('Collection ARN: ' + response['CollectionArn'])
+```
+
+### Para borrar la colección:
+```
+response=rekognition.delete_collection(CollectionId="workers")
+```
