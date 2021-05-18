@@ -4,6 +4,10 @@ import { environment } from '@env/environment';
 import { DashboardService } from './dashboard.service';
 import { Auth } from 'aws-amplify';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { Access } from './access-interface';
+import { Pipe, PipeTransform } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { PlotComponent } from './plot/plot.component';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -12,6 +16,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 export class DashboardComponent implements OnInit {
   version: string | null = environment.version;
   accessList: any[];
+  isLoading = false;
   columns = [
     { prop: 'dateCreation', name: 'Access' },
     { prop: 'email', name: 'Email' },
@@ -28,21 +33,34 @@ export class DashboardComponent implements OnInit {
   }
 
   createAccessList() {
-    this.dashboardService.getAccess().subscribe((accessData) => {
+    this.dashboardService.getAccess().subscribe((accessData: any) => {
       this.accessList = accessData;
-      for (let i = 0; i < this.accessList.length; i++) {
+
+      for (let i = 0; i < accessData.length; i++) {
         this.accessList[i].data = this.accessList[i].data.name + ' ' + this.accessList[i].data.surname;
-        this.accessList[i].dateCreation = this.accessList[i].dateCreation;
+        //this.accessList[i].dateCreation = this.accessList[i].dateCreation;
       }
+      console.log(this.accessList);
       this.temp = [...this.accessList];
     });
   }
+  //Refresh the users
+  refreshUserList(event: any) {
+    this.isLoading = true;
+
+    setTimeout(() => {
+      this.ngOnInit();
+      this.isLoading = false;
+
+      event.target.complete();
+    }, 2000);
+  }
 
   updateFilter(event: any) {
-    const val = event.target.value.toLowerCase();
+    const val = event.toLowerCase();
     // filter our data
     const temp = this.temp.filter(function (d: any) {
-      return d.dateCreation.toLowerCase().indexOf(val) !== -1 || !val;
+      return d.data.toLowerCase().indexOf(val) !== -1 || !val;
     });
     // update the rows
     this.accessList = temp;
@@ -51,6 +69,7 @@ export class DashboardComponent implements OnInit {
   }
   async signOut() {
     try {
+      sessionStorage.removeItem('authorization');
       await Auth.signOut({ global: true });
     } catch (error) {
       console.log('error signing out: ', error);

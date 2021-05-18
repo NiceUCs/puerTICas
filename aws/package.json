@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "serverless deploy"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "serverless": "^2.41.2",
     "serverless-dynamodb-local": "^0.2.39",
-    "serverless-offline": "^7.0.0"
+    "serverless-offline": "^7.0.0",
+    "serverless-python-requirements": "^5.1.0"
   }
 }

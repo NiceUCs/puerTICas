@@ -14,23 +14,30 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshUserList($event)">
+    <ion-refresher-content> </ion-refresher-content>
+  </ion-refresher>
+
+  <app-plot *ngIf="!isLoading"></app-plot>
+
   <div class="ion-padding">
     <ion-item class="box">
       <ion-input
         type="text"
         clearInput="true"
         inputmode="search"
-        placeholder="Search by access"
-        (keyup)="updateFilter($event)"
+        placeholder="Search by name"
+        (keyup)="updateFilter($event.target.value)"
       ></ion-input>
     </ion-item>
 
     <!-- Theme classes dark, material, bootstrap -->
     <ngx-datatable
       class="material"
-      [limit]="8"
+      [limit]="10"
       [rows]="accessList"
       [rowHeight]="50"
+      [resizeable]="true"
       [columns]="columns"
       [columnMode]="'force'"
       [sortType]="'multi'"
@@ -39,5 +46,4 @@
     >
     </ngx-datatable>
   </div>
-  <!--app-plot [accessList]="accessList"></!--app-plot-->
 </ion-content>

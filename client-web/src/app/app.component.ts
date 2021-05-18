@@ -27,22 +27,23 @@ export class AppComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private i18nService: I18nService,
     private platform: Platform
-  ) {
-    const listener = (data: any) => console.log(data);
-    Hub.listen('auth', listener);
-  }
+  ) {}
 
   ngOnInit() {
     // Setup logger
+
     if (environment.production) {
+      const listener = (data: any) => this.setToken();
+      Hub.listen('auth', listener);
       Logger.enableProductionMode();
     }
+    const listener = (data: any) => this.setToken();
+    Hub.listen('auth', listener);
 
     log.debug('init');
 
     // Setup translations
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);
-
     const onNavigationEnd = this.router.events.pipe(filter((event) => event instanceof NavigationEnd));
 
     // Change page title on navigation or language change, based on route data
@@ -65,7 +66,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.titleService.setTitle(this.translateService.instant(title));
         }
       });
-    this.setToken();
   }
 
   private getJwtToken(): Promise<any> {

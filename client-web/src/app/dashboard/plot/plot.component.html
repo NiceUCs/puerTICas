@@ -1,21 +1,40 @@
+<ion-row>
+  <ion-col col-md-4>
+    <ion-card class="ion-text-center">
+      <ion-card-header color="primary">
+        <ion-card-title>Total Access</ion-card-title>
+      </ion-card-header>
+
+      <h1>{{ total_access }}</h1>
+    </ion-card>
+  </ion-col>
+  <ion-col col-md-4>
+    <ion-card class="ion-text-center">
+      <ion-card-header color="primary">
+        <ion-card-title>Access Today</ion-card-title>
+      </ion-card-header>
+      <h1>{{ access_today }}</h1>
+    </ion-card>
+  </ion-col>
+</ion-row>
+
 <ion-card>
   <ion-item>
-    <h6 color="primary">Worker access plot</h6>
+    <h6 color="primary">Worker access</h6>
     <ion-select
       style="width: 20%"
       slot="end"
-      value="1h"
+      value="1w"
       interface="action-sheet"
       (ionChange)="filter($event.detail.value)"
     >
-      >
-
-      <ion-select-option value="1h">1 hour</ion-select-option>
-      <ion-select-option value="3h">3 hours</ion-select-option>
-      <ion-select-option value="12h">12 hours</ion-select-option>
-      <ion-select-option value="1d">1 day</ion-select-option>
       <ion-select-option value="3d">3 days</ion-select-option>
       <ion-select-option value="1w">1 week</ion-select-option>
+      <ion-select-option value="2w">2 weeks</ion-select-option>
+      <ion-select-option value="3w">3 weeks</ion-select-option>
+      <ion-select-option value="1m">1 month</ion-select-option>
+      <ion-select-option value="3m">3 months</ion-select-option>
+      <ion-select-option value="1y">1 year</ion-select-option>
     </ion-select>
   </ion-item>
 

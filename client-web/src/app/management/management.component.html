@@ -19,7 +19,7 @@
   </ion-refresher>
   <ion-list>
     <ion-list-header> Registered Users </ion-list-header>
-
+    <app-loader class="inline-loader" [isLoading]="isLoading"></app-loader>
     <ion-item *ngFor="let user of usersList">
       <ion-avatar slot="start">
         <img *ngIf="!isLoading" src="data:image/png;base64,{{ user.data.image }}" />

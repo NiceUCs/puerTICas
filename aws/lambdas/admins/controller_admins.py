@@ -38,20 +38,16 @@ s3 = boto3.client('s3', region_name=aws_region)
 
 def get_users():
     try:
+        expiration = 9999
         result = dynamodb_workers_table.scan()
         response = result["Items"]
-        return response
-
-    except Exception as e:
-        raise HTTPError(500, 'Internal Error: %s' % e)
-
-def get_user_image(data):
-    try: 
-        s3_hl = boto3.resource('s3') 
+        s3_hl = boto3.resource('s3')
         bucket = s3_hl.Bucket(workers_images_bucket)
-        image = bucket.Object(data["email"])
-        img_data = image.get().get('Body').read()
-        response = base64.b64encode(img_data).decode('ascii')
+        for user in response:
+            image = bucket.Object(user["email"])
+            img_data = image.get().get('Body').read()
+            user["data"]["image"] = base64.b64encode(img_data).decode('ascii')
+
         return response
 
     except Exception as e:

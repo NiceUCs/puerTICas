@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { User } from './user-interface';
+import { AppComponent } from '@app/app.component';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,6 @@ export class ManagementService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      authorization: sessionStorage.getItem('authorization'),
     }),
   };
   private url = '/admins';
@@ -29,9 +29,9 @@ export class ManagementService {
       email: user.email,
       data: user.data,
     });
+
     return this.http.post<any>(this.url + '/create_user', body, this.httpOptions);
   }
-
   /**
    * GET all users information from table ACCESS
    * @param -
@@ -39,10 +39,6 @@ export class ManagementService {
    */
   getUsers(): Observable<any> {
     return this.http.get<any>(this.url + '/get_users', this.httpOptions);
-  }
-
-  getUserImages(email: any): Observable<any> {
-    return this.http.get<any>(this.url + '/get_user_image/' + email, this.httpOptions);
   }
 
   /**
