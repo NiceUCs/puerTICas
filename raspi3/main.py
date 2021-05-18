@@ -47,8 +47,8 @@ while True:
   thread = th.Thread(target=waiting)
   exit_thread = th.Event()
   thread.start()
-  #Bloqueo hasta que se pulsa Intro
-  os.system('read aux')
+  #Bloqueo hasta que se pulsa o mueve el joystick
+  event = sense.stick.wait_for_event(emptybuffer=True)
   #Quitamos pantalla de espera
   exit_thread.set()
   
