@@ -43,6 +43,13 @@ export class DashboardComponent implements OnInit {
       this.temp = [...this.accessList];
     });
   }
+  //Refresh the users
+  refreshUserList(event: any) {
+    setTimeout(() => {
+      this.createAccessList();
+      event.target.complete();
+    }, 2000);
+  }
 
   updateFilter(event: any) {
     const val = event.toLowerCase();

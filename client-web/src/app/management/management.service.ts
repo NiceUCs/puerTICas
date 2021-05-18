@@ -13,7 +13,6 @@ export class ManagementService {
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      authorization: sessionStorage.getItem('authorization'),
     }),
   };
   private url = '/admins';

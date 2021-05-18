@@ -14,6 +14,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshUserList($event)">
+    <ion-refresher-content> </ion-refresher-content>
+  </ion-refresher>
   <app-plot *ngIf="!loading" [accessList]="accessList"></app-plot>
 
   <div class="ion-padding">

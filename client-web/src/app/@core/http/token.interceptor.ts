@@ -9,7 +9,7 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let tokenizedReq = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.token}`,
+        authorization: `Bearer ${this.token}`,
       },
     });
     return next.handle(tokenizedReq);
