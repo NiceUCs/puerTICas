@@ -31,3 +31,5 @@ Desplegar en AWS:
 o
 
 ```sls deploy --aws-profile educate```
+
+Recuerda haber configurado los credenciales de AWS antes del despliegue
