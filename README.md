@@ -1,6 +1,5 @@
-![PuerTICas](https://lh3.googleusercontent.com/pw/ACtC-3drcCUYAtW-0hwanqZPzHMmPhDPlXvmjQ95P4zE7Tj9BYhqMfvRpOnXPMsNxLTVkmA7sitK9dUWXvRWnApaKFDNvEs8RD-UGaoGhdkfbJnmNy_LH7bFxgmuqxXL9fxnZc6_i_xP2iEnN4EzWHkd_E9m=w379-h210-no?authuser=0)
+![PuerTICas](https://raw.githubusercontent.com/NiceUCs/puerTICas/refs/heads/main/client-web/src/assets/puerticas-logo-black.png)
 <img src="https://img.shields.io/static/v1?label=team&message=puerTICas&color=blueviolet"> 
-<img src="https://img.shields.io/static/v1?label=subject&message=PyGiTIC&color=orange"> 
 <img src="https://img.shields.io/static/v1?label=python&message=3.8&color=blue">
 ## Descripción 📢
 
@@ -23,7 +22,7 @@ _La aplicación ha sido desarrollada utilizando los servicios Cloud de AWS, bajo
 
 ## Arquitectura 📋
 
-![cliente](https://lh3.googleusercontent.com/pw/ACtC-3eNCX_Fdw6Ze4wxEQnizDIjSZNJIN8A2jUYOMexeyDvuNUI9dQIoVYlqMRM7O3jNYt2TJ1g90ouJpmo-j7zsflAmH9SB4PenApY_nKV6Wn7LC-3eS9OWiuO5OpfAVkfziu36eS1GcoCv03y6Yqaqkn5=w749-h920-no?authuser=0)
+![cliente](https://raw.githubusercontent.com/NiceUCs/puerTICas/refs/heads/main/docs/design/Arquitectura_diagrama.png)
 
 ## Autores ✒️
 - _Iván Larios López_  - [_Linkedin_](https://www.linkedin.com/in/ivan-larios-lopez/?originalSubdomain=es)
